@@ -1,0 +1,200 @@
+﻿---
+---
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <!-- (1) Optimize for mobile versions: http://goo.gl/EOpFl -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- (1) force latest IE rendering engine: bit.ly/1c8EiC9 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <title>About Sparks</title>
+  <meta name="description" content="The days were slipping past that the good things never last
+" />
+
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="MobileOptimized" content="320" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="canonical" href="http://sparksfyz.github.io//about/">
+
+  <link rel="shortcut icon" href="/assets/images/favicon.ico">
+<!--  <link rel="stylesheet" href=""> -->
+  <link rel="stylesheet" href="http://brick.a.ssl.fastly.net/Linux+Libertine:400,400i,700,700i/Open+Sans:400,400i,700,700i">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
+  <link rel="stylesheet" type="text/css" media="print" href="/css/print.css" />
+  <script type="text/javascript" src="/js/navbar.js"></script>
+
+</head>
+
+  <body itemscope itemtype="http://schema.org/Article">
+    <!-- header start -->
+
+<a href="http://sparksfyz.github.io/" class="logo-readium"><span class="logo" style="background-image: url(/assets/images/df_logo2.jpg)" ></span></a>
+
+
+
+<div class="left-navbar">
+    <h4 class="">CATEGORY</h4>  
+   <!--  <hr class="index-headline featured">   -->
+    <!-- <ul class="category" style="list-style-type:none" >
+    <h4 class="">CATEGORY</h4>
+      
+    <li class="category_list"><a href="/showCategory.html?categoryName=tech" itemprop="url" style=" text-decoration:none">tech</a> (1)  
+    </li>  
+      
+    <li class="category_list"><a href="/showCategory.html?categoryName=mood" itemprop="url" style=" text-decoration:none">mood</a> (1)  
+    </li>  
+      
+    </ul> -->
+
+    <a class="tech" data-toggle="collapse" data-target="#classified-0" id="tech" >TECH</a>
+        <ul id="classified-0" class="nav" style="list-style-type:none">
+          
+          
+            <li class="techlist"><a href="/tech/2015/01/29/configuration-of-Blog.html">Configuration Of GitHub Page</a></li>
+          
+        </ul>
+
+
+
+        <a class="mood" data-toggle="collapse" data-target="#classified-1" id="mood" >MOOD</a>
+        <ul id="classified-1" class="nav" style="list-style-type:none">
+          
+          
+            <li class="moodlist"><a href="/mood/2015/01/29/space-bound.html">Space Bound</a></li>
+          
+        </ul>
+
+
+  </div> 
+
+<!-- header end -->
+
+    <main class="content" role="main">
+      <article class="post">
+        
+        <div class="noarticleimage">
+          <div class="post-meta">
+            <h1 class="post-title">About Sparks</h1>
+            <div class="cf post-meta-text">
+              <div class="author-image" style="background-image: url()">Blog Logo</div>
+              <h4 class="author-name" itemprop="author" itemscope itemtype="http://schema.org/Person"></h4>
+            </div>
+          </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        
+        <section class="post-content">
+          <a name="topofpage"></a>
+          <h2>Sparks</h2>
+
+<p>From Shanghai || Twenty-Two</p>
+
+<p><strong>Education:</strong>
+   Bachelor,Attended SouthEast University(NanJing,China),major in COSE;</p>
+
+<p><strong>Skills:</strong>
+   Web Development</p>
+
+<p><strong>Awards:</strong>   </p>
+
+<p><strong>Interests:</strong></p>
+
+        </section>
+      </article>
+    </main>
+    <div class="bottom-closer">
+      <div class="background-closer-image"  style="background-image: url(/assets/images/effiel.jpg)">
+        Image
+      </div>
+      <div class="inner">
+        <h1 class="blog-title">Sparks</h1>
+        <h2 class="blog-description">The days were slipping past that the good things never last
+</h2>
+        <a href="/" class="btn">Back to Overview</a>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
+<script type="text/javascript" src="/assets/js/index.js"></script>
+<script type="text/javascript" src="/assets/js/readingTime.min.js"></script>
+
+<script type="text/JavaScript">
+
+// function showdiv(targetid,objN){  
+//       var target=document.getElementById(targetid);
+//       var clicktext=document.getElementById(objN)
+
+//             if (target.style.display=="block"){
+//                 target.style.display="none";
+
+//             } else {
+//                 target.style.display="block";
+//                // clicktext.innerText='关闭详细信息信息';
+//             }
+   (function ($) {
+
+    $('.tech').click( function() {
+          $('.techlist').toggle();
+    });
+
+     $('.mood').click( function() {
+          $('.moodlist').toggle();
+    });
+}(jQuery));
+
+
+</script>
+<script>
+(function ($) {
+  "use strict";
+  $(document).ready( function() {
+
+    $('.techlist').hide();
+    $('.moodlist').hide();
+
+    var $window = $(window),
+    $image = $('.post-image-image, .teaserimage-image');
+    $window.on('scroll', function() {
+      var top = $window.scrollTop();
+
+      if (top < 0 || top > 1500) { return; }
+      $image
+        .css('transform', 'translate3d(0px, '+top/3+'px, 0px)')
+        .css('opacity', 1-Math.max(top/700, 0));
+    });
+    $window.trigger('scroll');
+
+    var height = $('.article-image').height();
+    $('.post-content').css('padding-top', height + 'px');
+
+
+// $('.list').click( function() {
+//           $('.hide').hide();
+//     });
+
+    $('a[href*=#]:not([href=#])').click(function() {
+      if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
+       && location.hostname == this.hostname) {
+        var target = $(this.hash);
+        target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+        if (target.length) {
+          $('html,body').animate({ scrollTop: target.offset().top }, 500);
+          return false;
+        }
+      }
+    });
+  });
+}(jQuery));
+</script>
+
+
+  </body>
+</html>
