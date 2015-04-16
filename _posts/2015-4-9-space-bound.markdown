@@ -5,7 +5,7 @@ date:   2015-1-29 14:34:25
 categories: mood
 tags: mood
 description: 記壹筆刚读完的ナミヤ雑貨店の奇蹟
-image: /assets/article_images/2015-1-29-configuration-of-Blog/effiel.JPG
+image: /assets/article_images/2015-1-29-configuration-of-Blog/effiel.jpg
 ---
 
 
