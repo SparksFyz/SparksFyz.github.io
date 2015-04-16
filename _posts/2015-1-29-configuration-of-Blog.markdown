@@ -5,7 +5,7 @@ date:   2015-1-29 14:34:25
 categories: tech
 tags: tech
 description: The process and experience of blog building on GitHub,includes configurations of git&&jekyll and introduction of liquid simply... ...
-image: /assets/images/effiel.JPG
+image: /assets/article_images/2015-1-29-configuration-of-Blog/effiel.jpg
 ---
 
 
