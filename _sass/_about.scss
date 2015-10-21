@@ -1,0 +1,81 @@
+
+
+.personal-detail {
+  max-width: 700px;
+  @include center-block();
+}
+
+.personal-category {
+  position: relative;
+  margin-top: 1.5em;
+}
+
+.personal-category-title {
+  font-size: 0.9em;
+  max-width: 150px;
+  text-align: center;
+  padding: 10px 15px;
+  border-radius: 5px;
+  color: white;
+  position: relative;
+  left: -20px;
+  top: 0;
+  font-weight: 700;
+}
+
+.target-border {
+  // position: absolute;
+  left: -38px;
+  top: -15px;
+  width: 40px;
+  height: 40px;
+  // border: 15px solid white;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.target-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  z-index: 10;
+  margin: 5px auto;
+  // border: 10px solid white;
+}
+
+.overview {
+  .personal-category-title {
+      background-color: $black;
+  }
+}
+
+.skill {
+  .personal-category-title {
+    background-color: $blue;
+  }
+  .target-border{
+    // background: $b;
+    border: 15px solid $blue;
+  }
+  .target-dot {
+    background: $blue;
+  }
+}
+
+.experience {
+  .personal-category-title {
+    background-color: $green;
+  }
+}
+
+.project {
+  .personal-category-title {
+    background-color: $purple;
+  }
+}
+
+.education {
+  .personal-category-title {
+    background-color: $grey;
+  }
+}
