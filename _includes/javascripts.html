@@ -1,44 +1,16 @@
-<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="{{ "/assets/js/jquery.fitvids.js" | prepend: site.baseurl  }}"></script>
-<script type="text/javascript" src="{{ "/assets/js/index.js" | prepend: site.baseurl  }}"></script>
-<script type="text/javascript" src="{{ "/assets/js/readingTime.min.js" | prepend: site.baseurl  }}"></script>
+<script src="/static/js/jquery-1.11.1.min.js"></script>
+<script src="/static/js/plugins/jquery.dlmenu.js"></script>
 
-<script type="text/JavaScript">
-
-// function showdiv(targetid,objN){  
-//       var target=document.getElementById(targetid);
-//       var clicktext=document.getElementById(objN)
-
-//             if (target.style.display=="block"){
-//                 target.style.display="none";
-
-//             } else {
-//                 target.style.display="block";
-//                // clicktext.innerText='关闭详细信息信息';
-//             }
-   (function ($) {
-
-    $('.tech').click( function() {
-          $('.techlist').toggle();
-    });
-
-     $('.mood').click( function() {
-          $('.moodlist').toggle();
-    });
-}(jQuery));
-
-
-</script>
 <script>
+//.article-image transition when scroll
 (function ($) {
   "use strict";
   $(document).ready( function() {
-
-    $('.techlist').hide();
-    $('.moodlist').hide();
-
+    $('#dl-menu').dlmenu({
+      animationClasses : { classin : 'dl-animate-in', classout : 'dl-animate-out' }
+    });
     var $window = $(window),
-    $image = $('.post-image-image, .teaserimage-image');
+    $image = $('.post-image');
     $window.on('scroll', function() {
       var top = $window.scrollTop();
 
@@ -52,10 +24,6 @@
     var height = $('.article-image').height();
     $('.post-content').css('padding-top', height + 'px');
 
-
-// $('.list').click( function() {
-//           $('.hide').hide();
-//     });
 
     $('a[href*=#]:not([href=#])').click(function() {
       if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
@@ -71,4 +39,3 @@
   });
 }(jQuery));
 </script>
-

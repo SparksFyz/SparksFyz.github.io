@@ -2,268 +2,317 @@
 <html>
 
   <head>
-  <meta charset="utf-8">
-  <!-- (1) Optimize for mobile versions: http://goo.gl/EOpFl -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- (1) force latest IE rendering engine: bit.ly/1c8EiC9 -->
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sparks</title>
+	<meta name="description" content="一只野生的切图仔">
 
-  <title>Sparks</title>
-  <meta name="description" content="The days were slipping past that the good things never last
-" />
+	<link rel="canonical" href="/">
+	<link rel="alternate" type="application/rss+xml" title="Sparks" href="/feed.xml" />
 
-  <meta name="HandheldFriendly" content="True" />
-  <meta name="MobileOptimized" content="320" />
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
 
-  <link rel="canonical" href="http://sparksfyz.github.io//">
+	<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/fontawesome/4.2.0/css/font-awesome.min.css"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"> -->
 
-  <link rel="shortcut icon" href="/assets/images/favicon.ico">
-<!--  <link rel="stylesheet" href=""> -->
-  <link rel="stylesheet" href="http://brick.a.ssl.fastly.net/Linux+Libertine:400,400i,700,700i/Open+Sans:400,400i,700,700i">
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
-  <link rel="stylesheet" type="text/css" media="screen" href="/css/main.css" />
-  <link rel="stylesheet" type="text/css" media="print" href="/css/print.css" />
-  <script type="text/javascript" src="/js/navbar.js"></script>
+	<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+
+	<!-- <script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
+
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/static/js/index.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/railscasts.min.css"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai.min.css"> -->
+	<!-- <script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/languages/dos.min.js"></script> -->
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?b636473d6ffa17615f94e5db1459ea81";
+	  var s = document.getElementsByTagName("script")[0];
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
 
 </head>
 
-
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
   <body>
 
-    <!-- header start -->
+    <header>
 
-<a href="http://sparksfyz.github.io/" class="logo-readium"><span class="logo" style="background-image: url(/assets/images/df_logo2.jpg)" ></span></a>
-
-
-
-<div class="left-navbar">
-    <h4 class="">CATEGORY</h4>  
-   <!--  <hr class="index-headline featured">   -->
-    <!-- <ul class="category" style="list-style-type:none" >
-    <h4 class="">CATEGORY</h4>
-      
-    <li class="category_list"><a href="/showCategory.html?categoryName=tech" itemprop="url" style=" text-decoration:none">tech</a> (1)  
-    </li>  
-      
-    <li class="category_list"><a href="/showCategory.html?categoryName=mood" itemprop="url" style=" text-decoration:none">mood</a> (1)  
-    </li>  
-      
-    </ul> -->
-
-    <a class="tech" data-toggle="collapse" data-target="#classified-0" id="tech" >TECH</a>
-        <ul id="classified-0" class="nav" style="list-style-type:none">
-          
-          
-            <li class="techlist"><a href="/tech/2015/01/29/configuration-of-Blog.html">Configuration Of GitHub Page</a></li>
-          
-        </ul>
-
-
-
-        <a class="mood" data-toggle="collapse" data-target="#classified-1" id="mood" >MOOD</a>
-        <ul id="classified-1" class="nav" style="list-style-type:none">
-          
-          
-            <li class="moodlist"><a href="/mood/2015/01/29/space-bound.html">Space Bound</a></li>
-          
-        </ul>
-
-
-  </div> 
-
-<!-- header end -->
-
-
-    <!-- content start -->
-
-    <div class="page-content">
-      <div class="wrapper">
-        <div class="teaserimage">
-    <div class="teaserimage-image" style="background-image: url(/assets/images/effiel.jpg)">
-        Teaser Image
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Sparks</a>
+      <p class="navbar-text">Front-end Dev Engineer</p>
     </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li class="active">
+          
+          <a href="/"><span class="glyphicon glyphicon-th-large"></span> Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/demo/"><span class="glyphicon glyphicon-play"></span> Demo</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/project/"><span class="glyphicon glyphicon-fire"></span> Project</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/about/"><span class="glyphicon glyphicon-heart"></span> About</a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div id="index" class="row">
+  <div class="col-sm-9">
+    <div class="post-area">
+      <!-- small button -->
+     <!--  <p class="pull-right visible-xs">
+       <button>toggle</button>
+     </p> -->
+      <div class="post-list-header">
+        Posts
+      </div>
+      <div class="post-list-body">
+        
+        <div class="all-posts" post-cate="All">
+          
+            <a class="post-list-item" href="/2015/04/06/arrays-similar/">
+              <h2>
+              判断两个数组是否相似 (arraysSimilar)
+              </h2>
+              <span class="">Apr 6, 2015</span>
+            </a>
+
+
+
+          
+            <a class="post-list-item" href="/2015/01/29/configuration-of-blog/">
+              <h2>
+              Configuration Of GitHub Page
+              </h2>
+              <span class="">Jan 29, 2015</span>
+            </a>
+
+
+
+          
+          <!-- 分页 -->
+      <div class="paginator">
+              
+      </div>
+      
+
+
+        </div>
+        <!-- <div class="posts-in-categories"> -->
+        
+          <div post-cate="github">
+            
+              
+                
+              
+            
+              
+                
+                  <a href="/2015/01/29/configuration-of-blog/" class="post-list-item">
+                    <h2>
+                    Configuration Of GitHub Page
+                    </h2>
+                    <span class="">Jan 29, 2015</span>
+                  </a>
+                
+              
+            
+          </div>
+        
+          <div post-cate="pages">
+            
+              
+                
+              
+            
+              
+                
+                  <a href="/2015/01/29/configuration-of-blog/" class="post-list-item">
+                    <h2>
+                    Configuration Of GitHub Page
+                    </h2>
+                    <span class="">Jan 29, 2015</span>
+                  </a>
+                
+              
+            
+          </div>
+        
+          <div post-cate="javascript">
+            
+              
+                
+              
+            
+              
+                
+                  <a href="/2015/04/06/arrays-similar/" class="post-list-item">
+                    <h2>
+                    判断两个数组是否相似 (arraysSimilar)
+                    </h2>
+                    <span class="">Apr 6, 2015</span>
+                  </a>
+                
+              
+            
+          </div>
+        
+        
+        <!-- </div> -->
+      </div>
+      
+
+     
+    </div>
+  </div>
+  <div class="col-sm-3">
+    <div class="shadow-corner-curl hidden-xs">
+      <div class="categories-list-header">
+        Categories
+      </div>
+      
+      <a href="/index.html" class="categories-list-item" cate="All">
+        All<span class="my-badge"> 2</span>
+      </a>
+      
+        <a href="javascript:;" class="categories-list-item" cate="github">
+          github <span class="my-badge">1</span>
+        </a>
+      
+        <a href="javascript:;" class="categories-list-item" cate="pages">
+          pages <span class="my-badge">1</span>
+        </a>
+      
+        <a href="javascript:;" class="categories-list-item" cate="javascript">
+          javascript <span class="my-badge">1</span>
+        </a>
+      
+    </div>
+  </div>
 </div>
 
 
-
-
-<header class="blog-header">
-    
-      <a class="blog-logo" href="http://sparksfyz.github.io/" style="background-image: url('/assets/images/df_logo2.jpg')">Sparks</a>
-    
-    <h1 class="blog-title">Sparks</h1>
-    <h2 class="blog-description">The days were slipping past that the good things never last
-</h2>
-    <div class="custom-links">
-      
-        
-            <a class="icon-github" href="https://github.com/SparksFyz">
-              <i class="fa fa-github"></i>
-            </a>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-        
-      
-      <a href="/about/">About Sparks</a>
     </div>
 
- 
 
-</header>
- 
-
-
-<main class="content" role="main">
-
-
-
-    <h5 class="index-headline normal"><span>TECH & MOOD</span></h5>
-    
-
-    <div class="cf frame">
-      
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting" role="article">
-          <div class="article-item">
-            <header class="post-header">
-              <h2 class="post-title" itemprop="name"><a href="/mood/2015/01/29/space-bound.html" itemprop="url">Space Bound</a></h2>
-            </header>
-            <section class="post-excerpt" itemprop="description">
-             <!--  <p>About two weeks ago,when I finished reading the books,a desire for writing something emerged. Forgive me that I have to put it off until now.Reason?...probably I need some time to ponder the content or maybe the procrastination...when it comes to the books,I am really grateful to my friend XiaoLan and...</p> -->
-             <p>記壹筆刚读完的ナミヤ雑貨店の奇蹟</p>
-            </section>
-            <div class="post-meta">
-              <time datetime="29 January 2015">29 January 2015</time>
-<!--            <span class="post-tags-set">on <span class="post-tag-">, <a href="/tag/"></a></span></span>-->
-            </div>
-          </div>
-        </article>
-      
-        <article class="post" itemscope itemtype="http://schema.org/BlogPosting" role="article">
-          <div class="article-item">
-            <header class="post-header">
-              <h2 class="post-title" itemprop="name"><a href="/tech/2015/01/29/configuration-of-Blog.html" itemprop="url">Configuration Of GitHub Page</a></h2>
-            </header>
-            <section class="post-excerpt" itemprop="description">
-             <!--  <p>github page github-page是一个免费的静态网站托管平台，由github提供，它具有以下特点： 免空间费,免流量费 具有项目主页和个人主页两种选择 支持页面生成，可以使用jekyll来布局页面，使用markdown来书写正文可以自定义域名 我要介绍的是个人主页（windows） 每个帐号只能有一个仓库来存放个人主页，而且仓库的名字必须是username/username.github.io，这是特殊的命名约定。你可以通过http://username.github.io来访问你的个人主页。个人主页的网站内容是在master分支下的。 Setup jekyll for windows 在建完仓库之后，需要配置本地测试环境.配置过程主要分为以下几步： 安装ruby 安装Devkit 安装jekyll 安装Pygments 启动jekyll&amp;&amp;测试 安装ruby 我这里选择2.7.8版本的，无脑安装，记得勾选Add Ruby executables to your PATH,这样就省去了添加环境变量. 打开cmd 可用ruby -v测试是否安装成功. 安装Devkit 需要注意Devkit版本需要和ruby一致. 解压至某文件夹后，用cmd进入该目录. 运行ruby dk.rb init (这条命令只对使用rubyinstall安装的ruby有效,如果是其他方式安装的话，需要手动修改config.yml,于末尾添加新的一行 - C:\Ruby200-x64) 然后执行,执行ruby dk.rb install 安装Rubygems 解压后，用cmd进入该目录,执行ruby setup.rb 如果希望加快应用的下载速度,还是选择淘宝的镜像比较好. 安装jekyll 确保gem已经安装（gem -v） 执行 gem install...</p> -->
-             <p>The process and experience of blog building on GitHub,includes configurations of git&&jekyll and introduction of liquid simply... ...</p>
-            </section>
-            <div class="post-meta">
-              <time datetime="29 January 2015">29 January 2015</time>
-<!--            <span class="post-tags-set">on <span class="post-tag-">, <a href="/tag/"></a></span></span>-->
-            </div>
-          </div>
-        </article>
-      
+    <div id="top" data-toggle="tooltip" data-placement="left" title="回到顶部">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
     </div>
 
-    <nav class="pagination" role="navigation">
-      
-      <span class="page-number">Page 1 of 1</span>
-      
-    </nav>
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:sparksvann@gmail.com"><span class="glyphicon glyphicon-envelope"></span> sparksvann@gmail.com</a>
+        <span class="point"> · </span>
+        
 
+          <a href="https://github.com/Sparksfyz">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+            </span>
+            Github
+            <!-- <span>Sparksfyz</span> -->
+          </a>
 
-    <!-- 
-     -->
-
-</main>
-
+          
+          <span class="point"> · </span>
+          <!-- <span><a href="/feed.xml">RSS</a></span> -->
+          <!-- <span class="point"> · </span> -->
+          <span>一只野生的切图仔</span>
+          <span class="point"> · </span>
+          <span>&copy; 2015 Sparks</span>
+          <span class="point"> · </span>
       </div>
     </div>
-
-    <!-- content end -->
-
-    <!-- footer start -->
-
-<footer class="site-footer">
-  <!-- <a class="subscribe" href="/feed.xml"> <span class="tooltip"> <i class="fa fa-rss"></i> Subscribe!</span></a> -->
-    <div class="inner">
-         <section class="copyright">Email: <a href="mailto:sparksVann@gmail.com">sparksVann@gmail.com</a> </section>
-         <section class="poweredby">My GitHub: <a href="https://github.com/SparksFyz">SparksFyz</a></section>
-         <section class="date">&bull; Built In &bull;  2015 &bull;</section>
-    </div>
+  </div>
 </footer>
 
-<!-- footer end -->
 
-    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="/assets/js/jquery.fitvids.js"></script>
-<script type="text/javascript" src="/assets/js/index.js"></script>
-<script type="text/javascript" src="/assets/js/readingTime.min.js"></script>
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hygblog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+<!-- 多说公共JS代码 end -->
 
-<script type="text/JavaScript">
-
-// function showdiv(targetid,objN){  
-//       var target=document.getElementById(targetid);
-//       var clicktext=document.getElementById(objN)
-
-//             if (target.style.display=="block"){
-//                 target.style.display="none";
-
-//             } else {
-//                 target.style.display="block";
-//                // clicktext.innerText='关闭详细信息信息';
-//             }
-   (function ($) {
-
-    $('.tech').click( function() {
-          $('.techlist').toggle();
+<!-- 在新窗口中打开 -->
+  <script type="text/javascript">
+    function addBlankTargetForLinks () {
+      $('a[href^="http"]').each(function(){
+          $(this).attr('target', '_blank');
+      });
+    }
+    //每次在有DOM插入时触发
+    $(document).bind('DOMNodeInserted', function(event) {
+      addBlankTargetForLinks();
     });
-
-     $('.mood').click( function() {
-          $('.moodlist').toggle();
-    });
-}(jQuery));
-
-
-</script>
-<script>
-(function ($) {
-  "use strict";
-  $(document).ready( function() {
-
-    $('.techlist').hide();
-    $('.moodlist').hide();
-
-    var $window = $(window),
-    $image = $('.post-image-image, .teaserimage-image');
-    $window.on('scroll', function() {
-      var top = $window.scrollTop();
-
-      if (top < 0 || top > 1500) { return; }
-      $image
-        .css('transform', 'translate3d(0px, '+top/3+'px, 0px)')
-        .css('opacity', 1-Math.max(top/700, 0));
-    });
-    $window.trigger('scroll');
-
-    var height = $('.article-image').height();
-    $('.post-content').css('padding-top', height + 'px');
-
-
-// $('.list').click( function() {
-//           $('.hide').hide();
-//     });
-
-    $('a[href*=#]:not([href=#])').click(function() {
-      if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'')
-       && location.hostname == this.hostname) {
-        var target = $(this.hash);
-        target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
-        if (target.length) {
-          $('html,body').animate({ scrollTop: target.offset().top }, 500);
-          return false;
-        }
-      }
-    });
-  });
-}(jQuery));
-</script>
-
-
-
+  </script>
   </body>
-
 </html>

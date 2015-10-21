@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  {% include landingHead.html %}
+  <body itemscope itemtype="http://schema.org/Article">
+  {% include navigation.html %}
+  <main class="content" role="main">
+      <article class="post">
+          <div class="article-image">
+              <div class="post-image" style="background-image: url({% if page.image %}{{ page.image }}{% endif %})">
+                Article Image
+              </div>
+              <div class="post-meta">
+                  <h1 class="post-title">{{page.headline}}</h1>
+                  <div class="cf post-meta-text">
+                      <div class="author-image" style="background-image: url(/static/image/{{ site.avatar }})">Blog Logo</div>
+                      <h3 class="author-name" itemprop="author" itemscope itemtype="http://schema.org/Person">{{ site.name }}</h3>
+                      <h3 class="landing-whatsup">{{site.whatsup}}</h3>
+                  </div>
+                  <div style="text-align:center">
+                      <a href="#topofpage" class="topofpage"><i class="fa fa-angle-down"></i></a>
+                  </div>
+              </div>
+          </div>
+          <div class="wrapper">
+              <section class="post-content center-block">
+                <a name="topofpage"></a>
+                {{content}}
+              </section>
+          </div>
+      </article>
+      {% include footer.html %}
+  </main>
+  {% include javascripts.html %}
+  </body>
+</html>

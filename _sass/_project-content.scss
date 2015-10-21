@@ -1,0 +1,42 @@
+body {
+  background-color: $clear-grey;
+  font-family: $font-sans, $font-serif;
+}
+.wrapper {
+  margin-top: 1100px;
+  max-width: 1220px;
+  min-height: 1400px;
+  margin: 0 auto;
+  .post-content {
+    // position: relative;
+    height: 100%;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2em 2em 0 2em;
+  }
+  .all-projects {
+    height: 100%;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    .project-title {
+      color: $blue;
+      text-decoration: none;
+    }
+    .project-date {
+      color: $grey;
+      font-size: 16px;
+      margin-left: 10px;
+    }
+    .project-description {
+      margin-left:$rs;
+      font-size: 14px;
+      text-indent: 28px;
+    }
+    .project-screenshot {
+
+    }
+  }
+}

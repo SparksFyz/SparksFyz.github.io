@@ -1,56 +1,35 @@
-encoding: utf-8
+# Site settings
+title: Sparks
+email: sparksvann@gmail.com
+description: 一只野生的切图仔
+whatsup: >
+        The days were slipping past that the good things never last
+avatar: avatar.jpg
+name: SparksVann
+# > # this means to ignore newlines until "baseurl:"
+#   Write an awesome description for your new site here. You can edit this
+#   line in _config.yml. It will appear in your document head meta (for
+#   Google search results) and in your feed.xml site description.
+
+# baseurl: "" # the subpath of your site, e.g. /blog/
+# url: "http://yourdomain.com" # the base hostname & protocol for your site
+# twitter_username: jekyllrb
+github: https://github.com/SparksFyz
+github_username:  Sparksfyz
+permalink: /:year/:month/:day/:title/
+
+#url settings
+homepage: http://SparksFyz.github.io/
+assets: /static/
 
 # Build settings
-markdown: redcarpet
-highlighter: pygments
+markdown: kramdown
 
-# Site settings
-title: "Sparks"
-description: > # this means to ignore newlines until "email:"
-   The days were slipping past that the good things never last
+paginate: 10
+paginate_path: "page:num"
 
-email: sparksVann@gmail.com
-#blog logo
-logo: "/assets/images/df_logo2.jpg"
-# blog cover
-#cover: "/assets/images/cA4aKEIPQrerBnp1yGHv_IMG_9534-3-2.jpg"
-cover: "/assets/images/effiel.jpg"
-
-name: 'SparksVann'
-author: 'SparksVann'
-author_image: "/assets/images/author1.jpg"
-
-paginate:	5
-
-url: "http://sparksfyz.github.io/" # the base hostname & protocol for your site
-baseurl: ""
-
-# social icons and sharing options
-social:
-  # - icon:	twitter
-  #   url:	https://twitter.com/dirkfabisch
-  #   desc: Follow me on twitter
-  #   share_url: http://twitter.com/share
-  #   share_title: ?text=
-  #   share_link: "&amp;url="
-
-#  - icon:	facebook
-#    url:	https://facebook.com/???
-#    desc: Connect with me facebook
-#    share_url: //www.facebook.com/sharer.php
-#    share_title: ?t=
-#    share_link: "&amp;u="
-
-  - icon:	github
-    url:	https://github.com/SparksFyz
-    desc:	Fork me on github
-    share_url:
-    share_title:
-    share_link:
-
- # - icon: google plus
- #   url:	https://google.com/
- #   desc:	Add me on google+
- #   share_url:
- #   share_title:
- #   share_link:
+# highlight
+# 本地用rouge, github上用pygments
+# highlighter: pygments
+# highlighter: rouge
+# highlighter: false

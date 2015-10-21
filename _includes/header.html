@@ -1,43 +1,43 @@
-<!-- header start -->
+<header>
 
-<a href="{{ site.url }}" class="logo-readium"><span class="logo" style="background-image: url({{ site.logo }})" ></span></a>
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ site.baseurl }}/">{{ site.title }}</a>
+      <p class="navbar-text">Front-end Dev Engineer</p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
 
+        {% if page.url == "/index.html" %}
+          <li class="active">
+          {% else %}
+          <li>
+        {% endif %}
+          <a href="{{ site.baseurl }}/"><span class="glyphicon glyphicon-th-large"></span> Home</a></li>
 
-
-<div class="left-navbar">
-    <h4 class="">CATEGORY</h4>  
-   <!--  <hr class="index-headline featured">   -->
-    <!-- <ul class="category" style="list-style-type:none" >
-    <h4 class="">CATEGORY</h4>
-    {% for category in site.categories %}  
-    <li class="category_list"><a href="/showCategory.html?categoryName={{ category | first }}" itemprop="url" style=" text-decoration:none">{{ category | first }}</a> ({{ category | last | size }})  
-    </li>  
-    {% endfor %}  
-    </ul> -->
-
-    <a class="tech" data-toggle="collapse" data-target="#classified-0" id="tech" >TECH</a>
-        <ul id="classified-0" class="nav" style="list-style-type:none">
-          {% if null == site.categories.tech %}
-            <li><a id="nothing" data-toggle="popover" data-placement="bottom" title="" data-content="TECH" data-original-title="">There is nothing about tech</a></li>
+        {% for p in site.pages %}
+          {% if p.title %}
+            {% if p.url == page.url %}
+              <li class="active">
+              {% else %}
+              <li>
+            {% endif %}
+            <a href="{{ p.url | prepend: site.baseurl }}"><span class="glyphicon {{ p.icon }}"></span> {{ p.title }}</a></li>
           {% endif %}
-          {% for post in site.categories.tech %}
-            <li class="techlist"><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
-          {% endfor %}
-        </ul>
+        {% endfor %}
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
 
-
-
-        <a class="mood" data-toggle="collapse" data-target="#classified-1" id="mood" >MOOD</a>
-        <ul id="classified-1" class="nav" style="list-style-type:none">
-          {% if null == site.categories.mood %}
-            <li><a id="nothing" data-toggle="popover" data-placement="bottom" title="" data-content="TECH" data-original-title="">There is nothing about MOOD</a></li>
-          {% endif %}
-          {% for post in site.categories.mood %}
-            <li class="moodlist"><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></li>
-          {% endfor %}
-        </ul>
-
-
-  </div> 
-
-<!-- header end -->
+</header>
