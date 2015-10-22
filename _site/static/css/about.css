@@ -16,10 +16,22 @@
   display: block;
   margin-left: auto;
   margin-right: auto; }
+  .personal-detail li {
+    list-style-type: disc;
+    line-height: 1.5em;
+    margin-bottom: 0.5em;
+    font-size: 1.1em; }
 
 .personal-category {
   position: relative;
   margin-top: 1.5em; }
+
+.personal-category-item {
+  border-left: 5px solid;
+  padding-left: 50px;
+  padding-bottom: 0.5em;
+  position: relative;
+  margin-top: 70px; }
 
 .personal-category-title {
   font-size: 0.9em;
@@ -33,9 +45,25 @@
   top: 0;
   font-weight: 700; }
 
+.item-name {
+  font-size: 1.5em;
+  font-weight: 700;
+  position: absolute;
+  top: -50px; }
+
+.item-date {
+  position: absolute;
+  right: 750px;
+  top: -45px;
+  text-align: right;
+  min-width: 180px;
+  color: #888;
+  font-size: 1.1em; }
+
 .target-border {
-  left: -38px;
-  top: -15px;
+  position: absolute;
+  left: -22px;
+  top: -55px;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -46,23 +74,49 @@
   height: 10px;
   border-radius: 50%;
   z-index: 10;
-  margin: 5px auto; }
+  margin: 10px auto; }
 
 .overview .personal-category-title {
   background-color: #000; }
+.overview .personal-category-item {
+  border-color: #000; }
+.overview .target-border {
+  border: 5px solid #000; }
+.overview .target-dot {
+  background: #000; }
 
 .skill .personal-category-title {
   background-color: #0066CC; }
+.skill .personal-category-item {
+  border-color: #0066CC; }
 .skill .target-border {
-  border: 15px solid #0066CC; }
+  border: 5px solid #0066CC; }
 .skill .target-dot {
   background: #0066CC; }
 
 .experience .personal-category-title {
   background-color: #21b080; }
+.experience .personal-category-item {
+  border-color: #21b080; }
+.experience .target-border {
+  border: 5px solid #21b080; }
+.experience .target-dot {
+  background: #21b080; }
 
 .project .personal-category-title {
   background-color: #500e4e; }
+.project .personal-category-item {
+  border-color: #500e4e; }
+.project .target-border {
+  border: 5px solid #500e4e; }
+.project .target-dot {
+  background: #500e4e; }
 
 .education .personal-category-title {
   background-color: #777; }
+.education .personal-category-item {
+  border-color: #777; }
+.education .target-border {
+  border: 5px solid #777; }
+.education .target-dot {
+  background: #777; }

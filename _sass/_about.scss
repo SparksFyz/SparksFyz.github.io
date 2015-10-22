@@ -1,13 +1,26 @@
 
-
 .personal-detail {
   max-width: 700px;
   @include center-block();
+  li {
+    list-style-type: disc;
+    line-height: 1.5em;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+}
 }
 
 .personal-category {
   position: relative;
   margin-top: 1.5em;
+}
+
+.personal-category-item {
+  border-left: 5px solid;
+  padding-left: 50px;
+  padding-bottom: 0.5em;
+  position: relative;
+  margin-top: 70px;
 }
 
 .personal-category-title {
@@ -23,13 +36,29 @@
   font-weight: 700;
 }
 
+.item-name {
+  font-size: 1.5em;
+  font-weight: 700;
+  position: absolute;
+  top: -50px;
+}
+
+.item-date {
+  position: absolute;
+  right: 750px;
+  top: -45px;
+  text-align: right;
+  min-width: 180px;
+  color: $grey8;
+  font-size: 1.1em;
+}
+
 .target-border {
-  // position: absolute;
-  left: -38px;
-  top: -15px;
+  position: absolute;
+  left: -22px;
+  top: -55px;
   width: 40px;
   height: 40px;
-  // border: 15px solid white;
   border-radius: 50%;
   z-index: 1;
 }
@@ -39,13 +68,21 @@
   height: 10px;
   border-radius: 50%;
   z-index: 10;
-  margin: 5px auto;
-  // border: 10px solid white;
+  margin: 10px auto;
 }
 
 .overview {
   .personal-category-title {
       background-color: $black;
+  }
+  .personal-category-item {
+    border-color: $black;
+  }
+  .target-border{
+    border: 5px solid $black;
+  }
+  .target-dot {
+    background: $black;
   }
 }
 
@@ -53,9 +90,11 @@
   .personal-category-title {
     background-color: $blue;
   }
+  .personal-category-item {
+    border-color: $blue;
+  }
   .target-border{
-    // background: $b;
-    border: 15px solid $blue;
+    border: 5px solid $blue;
   }
   .target-dot {
     background: $blue;
@@ -66,16 +105,43 @@
   .personal-category-title {
     background-color: $green;
   }
+  .personal-category-item {
+    border-color: $green;
+  }
+  .target-border{
+    border: 5px solid $green;
+  }
+  .target-dot {
+    background: $green;
+  }
 }
 
 .project {
   .personal-category-title {
     background-color: $purple;
   }
+  .personal-category-item {
+    border-color: $purple;
+  }
+  .target-border{
+    border: 5px solid $purple;
+  }
+  .target-dot {
+    background: $purple;
+  }
 }
 
 .education {
   .personal-category-title {
     background-color: $grey;
+  }
+  .personal-category-item {
+    border-color: $grey;
+  }
+  .target-border{
+    border: 5px solid $grey;
+  }
+  .target-dot {
+    background: $grey;
   }
 }
