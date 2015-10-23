@@ -2,7 +2,7 @@
 layout: post
 title:  "Configuration Of GitHub Page"
 date:   2015-1-29 14:34:25
-categories: github pages
+categories: github
 excerpt: The process and experience of blog building on GitHub,includes configurations of git&&jekyll and introduction of liquid simply... ...
 ---
 
