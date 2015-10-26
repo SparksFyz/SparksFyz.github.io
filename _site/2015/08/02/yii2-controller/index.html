@@ -135,6 +135,25 @@
   </li>
 </ul>
 
+<blockquote>
+  <p>yii中创建控制器是在application中的request通过UrlManager解析得出路由信息，然后再由yii\base\Module中的</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">runAction</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="nv">$params</span> <span class="o">=</span> <span class="p">[])</span></code></pre></div>
+
+<p>方法来创建控制器，最后由控制器再执行相应的动作.</p>
+
+<p>Yii中的路由分三种情况：</p>
+
+<ul>
+  <li>第一种是带有模块的(module id/controller id/action id)，</li>
+  <li>第二种是带有命名空间（子目录）的（sub dir）/controller id/action id)</li>
+  <li>第三种是只有控制器和动作的(controller id/action id)</li>
+</ul>
+
+<p>这三个有优先顺序，所以在创建控制器的时候，也是先查看是否是模块类型的路由，如果是，则获取这个模块，再由这个模块来创建控制器<br />
+接着再判断是否是第二种带有命名空间的。</p>
+
 <h3 id="functions-related-to-action-in-yiibasecontrollerphp">Functions related to action in <code>yii\base\Controller.php</code></h3>
 
 <p><strong>Sequence</strong>: <strong>resolve route</strong> —&gt; <strong>run action</strong> —&gt; <strong>create action</strong></p>

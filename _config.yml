@@ -24,12 +24,18 @@ assets: /static/
 
 # Build settings
 markdown: kramdown
+kramdown:
+  input: GFM
 
 paginate: 10
 paginate_path: "page:num"
 
 # highlight
 # 本地用rouge, github上用pygments
-# highlighter: pygments
+highlighter: pygments
 # highlighter: rouge
 # highlighter: false
+
+# markdown: redcarpet
+# redcarpet:
+#   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript"]

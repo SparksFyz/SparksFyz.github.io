@@ -19,6 +19,22 @@ Yii has three different controllers:
 
 * web\Controller.php        web controller
 
+> yii中创建控制器是在application中的request通过UrlManager解析得出路由信息，然后再由yii\base\Module中的
+
+{% highlight php startinline %}
+public function runAction($route, $params = [])
+{% endhighlight %}
+方法来创建控制器，最后由控制器再执行相应的动作.
+
+Yii中的路由分三种情况：
+
+* 第一种是带有模块的(module id/controller id/action id)，
+* 第二种是带有命名空间（子目录）的（sub dir）/controller id/action id)
+* 第三种是只有控制器和动作的(controller id/action id)
+
+这三个有优先顺序，所以在创建控制器的时候，也是先查看是否是模块类型的路由，如果是，则获取这个模块，再由这个模块来创建控制器
+接着再判断是否是第二种带有命名空间的。
+
 ### Functions related to action in `yii\base\Controller.php`
 
 **Sequence**: **resolve route** ---> **run action** ---> **create action**
