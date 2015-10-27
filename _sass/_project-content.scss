@@ -2,6 +2,16 @@ body {
   background-color: $clear-grey;
   font-family: $font-sans, $font-serif;
 }
+
+.cut-off-line {
+  margin-top: 20px;
+  padding: 0;
+  height: 20px;
+  width: 100%;
+  border-top-color: $clear-grey1;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
 .wrapper {
   margin-top: 1100px;
   max-width: 1220px;

@@ -683,6 +683,15 @@ body {
   background-color: #eee;
   font-family: Open Sans, MundoSans, "Helvetica Neue", Arial, Helvetica, sans-serif, Linux Libertine; }
 
+.cut-off-line {
+  margin-top: 20px;
+  padding: 0;
+  height: 20px;
+  width: 100%;
+  border-top-color: #DCD6D6;
+  border-top-width: 1px;
+  border-top-style: solid; }
+
 .wrapper {
   margin-top: 1100px;
   max-width: 1220px;
