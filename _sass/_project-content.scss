@@ -24,19 +24,31 @@ body {
     .project-title {
       color: $blue;
       text-decoration: none;
+      font-size: 1.3em;
     }
     .project-date {
       color: $grey;
-      font-size: 16px;
+      font-size: 0.9em;
       margin-left: 10px;
     }
     .project-description {
       margin-left:$rs;
-      font-size: 14px;
+      font-size: 1.1em;
       text-indent: 28px;
     }
     .project-screenshot {
-
+      // max-width: 650px;
+      // max-height: 80%;
+      .img-responsive-horizontal {
+        max-width: 650px;
+        max-height: 80%
+      }
+      .img-responsive-vertical {
+        display: inline;
+        margin-left:15px;
+        max-width: 400px;
+        max-height: 350px;
+      }
     }
   }
 }

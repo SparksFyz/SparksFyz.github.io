@@ -702,15 +702,24 @@ body {
     padding: 0; }
     .wrapper .all-projects .project-title {
       color: #0066CC;
-      text-decoration: none; }
+      text-decoration: none;
+      font-size: 1.3em; }
     .wrapper .all-projects .project-date {
       color: #777;
-      font-size: 16px;
+      font-size: 0.9em;
       margin-left: 10px; }
     .wrapper .all-projects .project-description {
       margin-left: 16px;
-      font-size: 14px;
+      font-size: 1.1em;
       text-indent: 28px; }
+    .wrapper .all-projects .project-screenshot .img-responsive-horizontal {
+      max-width: 650px;
+      max-height: 80%; }
+    .wrapper .all-projects .project-screenshot .img-responsive-vertical {
+      display: inline;
+      margin-left: 15px;
+      max-width: 400px;
+      max-height: 350px; }
 
 /* footer */
 footer {

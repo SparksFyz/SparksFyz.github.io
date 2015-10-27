@@ -39,3 +39,10 @@ highlighter: pygments
 # markdown: redcarpet
 # redcarpet:
 #   extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript"]
+
+#assets
+project:
+  cloudseu: /static/image/cloudseu.png
+  herald1: /static/image/herald1.jpg
+  herald2: /static/image/herald2.jpg
+  herald3: /static/image/herald3.jpg
