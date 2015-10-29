@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Yii2 Request Handler</title>
-	<meta name="description" content="Request Handler and Route in Yii2">
+	<title>angularjs + angular-couch-patato + requirejs</title>
+	<meta name="description" content="按需加载静态资源">
 
-	<link rel="canonical" href="/2015/10/23/yii2-request-handler/">
+	<link rel="canonical" href="/2015/09/09/angularjs-lazyload/">
 	<link rel="alternate" type="application/rss+xml" title="Sparks" href="/feed.xml" />
 
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -110,66 +110,96 @@
   <div id="myArticle" class="col-sm-9">
     <div class="post-area post">
       <header>
-        <h1>Yii2 Request Handler</h1>
-        <p>Oct 23, 2015</p>
+        <h1>angularjs + angular-couch-patato + requirejs</h1>
+        <p>Sep 9, 2015</p>
       </header>
       <hr>
       <article>
-        <ul id="markdown-toc">
-  <li><a href="#url-formats" id="markdown-toc-url-formats">URL Formats</a></li>
-  <li><a href="#routing" id="markdown-toc-routing">Routing</a></li>
-  <li><a href="#configure-urlmanager-component" id="markdown-toc-configure-urlmanager-component">Configure urlManager component</a></li>
-</ul>
+        <h3 id="section">按需加载静态资源</h3>
 
-<h3 id="url-formats">URL Formats</h3>
+<h4 id="angularjs--angular-couch-patato--requirejs">angularjs + angular-couch-patato + requirejs</h4>
 
 <ul>
-  <li>
-    <p><strong>the default URL format</strong> : <code>/index.php?r=post/view&amp;id=100</code></p>
-  </li>
-  <li>
-    <p><strong>pretty URL format</strong>      : <code>/index.php/post/100</code></p>
-  </li>
+  <li>index.html</li>
 </ul>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&quot;require.js&quot;</span> <span class="nx">data</span><span class="o">-</span><span class="nx">main</span><span class="o">=</span><span class="s2">&quot;main.js?v=1.0&quot;</span><span class="o">&gt;&lt;</span><span class="err">/script&gt;</span></code></pre></div>
+
+<ul>
+  <li>main.js</li>
+</ul>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">require</span><span class="p">.</span><span class="nx">config</span><span class="p">({</span>
+    <span class="nx">baseUrl</span><span class="o">:</span> <span class="s1">&#39;xxx&#39;</span><span class="p">,</span>
+    <span class="nx">paths</span><span class="o">:</span> <span class="p">{</span>
+             <span class="s1">&#39;jquery&#39;</span> <span class="o">:</span> <span class="s1">&#39;assets/js/jquery.min&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;angular&#39;</span> <span class="o">:</span> <span class="s1">&#39;assets/js/angular&#39;</span><span class="p">},</span>
+    <span class="nx">shim</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">angular</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">deps</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;jquery&#39;</span><span class="p">],</span>
+        <span class="nx">exports</span><span class="o">:</span> <span class="s1">&#39;angular&#39;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span></code></pre></div>
+
+<ul>
+  <li>route.js</li>
+</ul>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">$stateProvider</span>
+    <span class="p">.</span><span class="nx">state</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;index/&#39;</span><span class="p">,</span>
+        <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;xxxx.tpl.html&#39;</span><span class="p">,</span>
+        <span class="nx">resolve</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">ctrl</span><span class="o">:</span> <span class="nx">$couchPotatoProvider</span><span class="p">.</span><span class="nx">resolveDependencies</span><span class="p">([</span><span class="s1">&#39;home.ctrl&#39;</span><span class="p">])</span>
+        <span class="p">}</span>
+    <span class="p">})</span></code></pre></div>
 
 <blockquote>
-  <p>To use the pretty URL format, you will need to design a set of URL rules according to the actual requirement about how the URLs should look like.</p>
+  <p>Lazyload机制</p>
 </blockquote>
 
-<h3 id="routing">Routing</h3>
+<p>Lazyload机制可以使状态流转的时候去按需加载页面所需的资源，而不是在一开始就加载。AngularJS本身没有实现lazyload，这样的话就导致了webapp的性能受影响，在首次加载的时候就要加载全部的依赖。</p>
 
-<p><strong>First Step</strong>:</p>
+<blockquote>
+  <p>define angular module</p>
+</blockquote>
 
-<ul>
-  <li>The incoming request is parsed into a route and the associated query parameters.
-    <ul>
-      <li>When using the default URL format, parsing a request into a route is as simple as getting the value of a GET query parameter named r.</li>
-      <li>When using the pretty URL format, the URL manager will examine the registered URL rules to find matching one that can resolve the request into a route.</li>
-    </ul>
-  </li>
-</ul>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;scs.couch-potato&#39;</span><span class="p">,</span> <span class="s1">&#39;ui.router&#39;</span><span class="p">,</span> <span class="s1">&#39;ui.bootstrap&#39;</span><span class="p">,</span> <span class="s1">&#39;ui.bootstrap.tpls&#39;</span><span class="p">,</span> <span class="s1">&#39;chieffancypants.loadingBar&#39;</span><span class="p">]);</span></code></pre></div>
 
-<p><strong>Second Step</strong>:</p>
+<p>上述代码片段展示了Angular module的加载机制。而在实际应用中，特别是业务系统，一般是业务比较繁杂，功能模块比较多，在这种情况下，angular module的默认机制就不符合我们要求了。</p>
 
-<ul>
-  <li>A controller action corresponding to the parsed route is created to handle the request.</li>
-</ul>
+<p>因此，我们采用requirejs + angular-couch-patato来实现Lazyload。angular-couch-patato负责托管angular的各种注册，包括controller,directive,filter,service等。平时我们写</p>
 
-<h3 id="configure-urlmanager-component">Configure urlManager component</h3>
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">).</span><span class="nx">controller</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//ctrl code here</span>
+    <span class="p">});</span></code></pre></div>
 
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="p">[</span>
-    <span class="s1">&#39;components&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">&#39;urlManager&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-            <span class="c1">//switch between the two URL formats by toggling the enablePrettyUrl property</span>
-            <span class="s1">&#39;enablePrettyUrl&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-            <span class="s1">&#39;showScriptName&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">&#39;enableStrictParsing&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">&#39;rules&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-                <span class="c1">// ...</span>
-            <span class="p">],</span>
-        <span class="p">],</span>
-    <span class="p">],</span>
-<span class="p">]</span></code></pre></div>
+<blockquote>
+  <p>To use LazyLoad,we need to change as follows:</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;app&#39;</span><span class="p">).</span><span class="nx">registerController</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//ctrl code here</span>
+    <span class="p">});</span></code></pre></div>
+
+<blockquote>
+  <p>将部件注册，这样所有的部件都交给couch-patato来管理，在需要的时候加上使用requirejs，app是统一管理的angular module，我们就这样写：</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="language-js" data-lang="js"><span class="nx">define</span><span class="p">([</span><span class="s1">&#39;app&#39;</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">app</span><span class="p">.</span><span class="nx">registerController</span><span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//ctrl code here</span>
+    <span class="p">});</span>
+ <span class="p">})</span></code></pre></div>
+
+<blockquote>
+  <p>首先加载依赖app，app是之前定义好的angular module，如var app = angular.module(‘app’, [‘scs.couch-potato’, ‘ui.router’, ‘ui.bootstrap’, ‘ui.bootstrap.tpls’, ‘chieffancypants.loadingBar’]);。然后在app上注册controller等。</p>
+</blockquote>
+
+<blockquote>
+  <p>上文路由机制部分提到，在注册路由的时候需要调用$couchPotatoProvider.resolveDependencies来实现lazyload。这里设计到couchPatato实现的一个关键，就是利用angular在路由里面的resolve机制，这里的resolve是指，路由在触发之前，必须拿到resolve里面定义的所有值。这样couchPatato就有机会去获取定义的依赖，而在每个依赖里面，会将controller注册到app，然后在路由触发后，定义的controller才得以调用。</p>
+</blockquote>
 
 
       </article>
@@ -180,7 +210,7 @@
     <div class="post-area post comment">
       <!-- 多说评论框 start -->
       
-      <div class="ds-thread" data-thread-key="/2015/10/23/yii2-request-handler" data-title="Yii2 Request Handler" data-url="gaohaoyang.github.io/2015/10/23/yii2-request-handler/"></div>
+      <div class="ds-thread" data-thread-key="/2015/09/09/angularjs-lazyload" data-title="angularjs + angular-couch-patato + requirejs" data-url="gaohaoyang.github.io/2015/09/09/angularjs-lazyload/"></div>
       
       <!-- 多说评论框 end -->
     </div>

@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Yii2 Request Handler</title>
-	<meta name="description" content="Request Handler and Route in Yii2">
+	<title>Questions About Angularjs</title>
+	<meta name="description" content="Summary About Angularjs">
 
-	<link rel="canonical" href="/2015/10/23/yii2-request-handler/">
+	<link rel="canonical" href="/2015/10/05/question-about-angularjs/">
 	<link rel="alternate" type="application/rss+xml" title="Sparks" href="/feed.xml" />
 
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -110,66 +110,133 @@
   <div id="myArticle" class="col-sm-9">
     <div class="post-area post">
       <header>
-        <h1>Yii2 Request Handler</h1>
-        <p>Oct 23, 2015</p>
+        <h1>Questions About Angularjs</h1>
+        <p>Oct 5, 2015</p>
       </header>
       <hr>
       <article>
-        <ul id="markdown-toc">
-  <li><a href="#url-formats" id="markdown-toc-url-formats">URL Formats</a></li>
-  <li><a href="#routing" id="markdown-toc-routing">Routing</a></li>
-  <li><a href="#configure-urlmanager-component" id="markdown-toc-configure-urlmanager-component">Configure urlManager component</a></li>
-</ul>
+        <h2 id="summary-about-angularjs">Summary About Angularjs</h2>
 
-<h3 id="url-formats">URL Formats</h3>
+<h3 id="basic">Basic</h3>
+
+<blockquote>
+  <p>angular的数据绑定采用什么机制？</p>
+</blockquote>
 
 <ul>
-  <li>
-    <p><strong>the default URL format</strong> : <code>/index.php?r=post/view&amp;id=100</code></p>
-  </li>
-  <li>
-    <p><strong>pretty URL format</strong>      : <code>/index.php/post/100</code></p>
-  </li>
+  <li>angular 通过监控能事件改变进行绑定；DOM事件(input改变，点击等)，XHR的响应触发回调；浏览器地址变化，计时器触发回调等；如果以上情况没有发生，MV改变的可能性不大;</li>
 </ul>
 
 <blockquote>
-  <p>To use the pretty URL format, you will need to design a set of URL rules according to the actual requirement about how the URLs should look like.</p>
+  <p>两个平级界面块a和b，如果a中触发一个事件，有哪些方式让b知道？</p>
 </blockquote>
 
-<h3 id="routing">Routing</h3>
-
-<p><strong>First Step</strong>:</p>
-
 <ul>
-  <li>The incoming request is parsed into a route and the associated query parameters.
-    <ul>
-      <li>When using the default URL format, parsing a request into a route is as simple as getting the value of a GET query parameter named r.</li>
-      <li>When using the pretty URL format, the URL manager will examine the registered URL rules to find matching one that can resolve the request into a route.</li>
-    </ul>
-  </li>
+  <li>两个controller之间进行交互可以通过父作用域数据共享，或者事件的冒泡广播机制；</li>
 </ul>
 
-<p><strong>Second Step</strong>:</p>
+<blockquote>
+  <p>一个angular应用应当如何良好地分层？</p>
+</blockquote>
 
 <ul>
-  <li>A controller action corresponding to the parsed route is created to handle the request.</li>
+  <li>将controller中的东西可以向JAVA代码一样进行层次划分，数据请求的dao层，数据处理的service层。很明显提问者应该是后端开发者，大部分只做前端开发的应该对此理解不深；</li>
 </ul>
 
-<h3 id="configure-urlmanager-component">Configure urlManager component</h3>
+<blockquote>
+  <p>angular应用常用哪些路由库，各自的区别是什么？</p>
+</blockquote>
 
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="p">[</span>
-    <span class="s1">&#39;components&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">&#39;urlManager&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-            <span class="c1">//switch between the two URL formats by toggling the enablePrettyUrl property</span>
-            <span class="s1">&#39;enablePrettyUrl&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-            <span class="s1">&#39;showScriptName&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">&#39;enableStrictParsing&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">&#39;rules&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-                <span class="c1">// ...</span>
-            <span class="p">],</span>
-        <span class="p">],</span>
-    <span class="p">],</span>
-<span class="p">]</span></code></pre></div>
+<ul>
+  <li>ui.router; angular原生的不支持嵌套路由，一个路由只能对应页面中一个 区域。ui.router 还没有遇到不支持的功能。</li>
+</ul>
+
+<blockquote>
+  <p>分属不同团队进行开发的angular应用，如果要做整合，可能会遇到哪些问题，如何解决？</p>
+</blockquote>
+
+<ul>
+  <li>服务冲突，angular将所有模块的所有服务混入了应用级别的单一命名空间里。开发时规划好，尽量避免冲突；</li>
+</ul>
+
+<blockquote>
+  <p>angular的缺点有哪些？</p>
+</blockquote>
+
+<blockquote>
+  <p>如果通过angular的directive规划一套全组件化体系，可能遇到哪些挑战？</p>
+</blockquote>
+
+<blockquote>
+  <p>如何看待angular1.2中引入的controller as语法？ 能解决什么样的问题？(scope)</p>
+</blockquote>
+
+<ul>
+  <li>参见 <a href="https://github.com/SparksFyz/Notebook/blob/master/Frontend/Angular/controller_as.md">Link</a></li>
+</ul>
+
+<blockquote>
+  <p>angular依赖注入</p>
+</blockquote>
+
+<ul>
+  <li>angular会将依赖的所有模块上的所有服务混入应用级别的单一命名空间内。所以，模块间可以相互依赖，不同模块间的服务可以相互依赖。这有一个问题就是会存在冲突的可能性。在需要使用的地方根据名称注入。</li>
+</ul>
+
+<blockquote>
+  <p>如何看待angular2</p>
+</blockquote>
+
+<h3 id="specific">Specific</h3>
+
+<blockquote>
+  <p>ng-if与ng-show/hide的区别？</p>
+</blockquote>
+
+<ul>
+  <li>ng-if会通过判断来决定是否在页面上生成DOM元素.</li>
+</ul>
+
+<blockquote>
+  <p>ng-repeat迭代数组的时候，如果数组中有相同值，会有什么问题，如何解决？</p>
+</blockquote>
+
+<ul>
+  <li>默认情况下ng-repeat是不允许存在相同值的，这是因为不能管理数据与DOM之间一对一的关系了；但是如果必须存在相同值，可以通过指定 track by $index用于区别不同数据</li>
+</ul>
+
+<blockquote>
+  <p>ng-click中写的表达式，能使用js原生对象上的方法，比如Math.max之类的吗？</p>
+</blockquote>
+
+<ul>
+  <li>ng-click中写的表达式不能使用比如Math.max等JS原生对象上的方法,这是因为执行时如$scope.Math.max</li>
+</ul>
+
+<blockquote>
+  <p>这种表达式里，竖线和后面的参数通过什么方式可以自定义？</p>
+</blockquote>
+
+<ul>
+  <li><a href="https://code.angularjs.org/1.4.5/docs/api/ng/provider/$filterProvider">filterProvider</a></li>
+</ul>
+
+<blockquote>
+  <p>factory和service,provide的关系</p>
+</blockquote>
+
+<ul>
+  <li>factory和service，provider都用于注册服务，不同的是provider只能配置阶段注入，factory和service只能运行阶段注入；provider通过$get工厂函数穿件新对象,factory通过工厂函数创建新对象，service通过构造函数创建新对象.</li>
+</ul>
+
+<blockquote>
+  <p>directive 如何调用外部函数，如何向函数里传递参数，如何expose函数给外部调用?</p>
+</blockquote>
+
+<blockquote>
+
+  <p>html:  js: $scope.currentDate = function(){return new Date();} 这种写法有没有问题(digest)?</p>
+</blockquote>
 
 
       </article>
@@ -180,7 +247,7 @@
     <div class="post-area post comment">
       <!-- 多说评论框 start -->
       
-      <div class="ds-thread" data-thread-key="/2015/10/23/yii2-request-handler" data-title="Yii2 Request Handler" data-url="gaohaoyang.github.io/2015/10/23/yii2-request-handler/"></div>
+      <div class="ds-thread" data-thread-key="/2015/10/05/question-about-angularjs" data-title="Questions About Angularjs" data-url="gaohaoyang.github.io/2015/10/05/question-about-angularjs/"></div>
       
       <!-- 多说评论框 end -->
     </div>

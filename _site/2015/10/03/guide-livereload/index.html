@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Yii2 Request Handler</title>
-	<meta name="description" content="Request Handler and Route in Yii2">
+	<title>guide-livereload</title>
+	<meta name="description" content="guide-livereload">
 
-	<link rel="canonical" href="/2015/10/23/yii2-request-handler/">
+	<link rel="canonical" href="/2015/10/03/guide-livereload/">
 	<link rel="alternate" type="application/rss+xml" title="Sparks" href="/feed.xml" />
 
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -110,67 +110,41 @@
   <div id="myArticle" class="col-sm-9">
     <div class="post-area post">
       <header>
-        <h1>Yii2 Request Handler</h1>
-        <p>Oct 23, 2015</p>
+        <h1>guide-livereload</h1>
+        <p>Oct 3, 2015</p>
       </header>
       <hr>
       <article>
-        <ul id="markdown-toc">
-  <li><a href="#url-formats" id="markdown-toc-url-formats">URL Formats</a></li>
-  <li><a href="#routing" id="markdown-toc-routing">Routing</a></li>
-  <li><a href="#configure-urlmanager-component" id="markdown-toc-configure-urlmanager-component">Configure urlManager component</a></li>
-</ul>
+        <h2 id="guide-livereload">如何使用 guide-livereload</h2>
 
-<h3 id="url-formats">URL Formats</h3>
+<p><a href="https://rubygems.org/gems/guard-livereload">guard-livereload官网</a></p>
 
-<ul>
-  <li>
-    <p><strong>the default URL format</strong> : <code>/index.php?r=post/view&amp;id=100</code></p>
-  </li>
-  <li>
-    <p><strong>pretty URL format</strong>      : <code>/index.php/post/100</code></p>
-  </li>
-</ul>
+<p><a href="https://github.com/guard/guard-livereload">guard-livereload github</a></p>
+
+<h3 id="section">安装</h3>
+
+<ol>
+  <li><code>sudo gem install guard-livereload</code></li>
+  <li>在Gemfile中添加 <code>gem 'guard-livereload', '~&gt; 2.4', require: false</code></li>
+  <li>进入工程目录， <code>guard init livereload</code></li>
+</ol>
+
+<h3 id="section-1">配置</h3>
 
 <blockquote>
-  <p>To use the pretty URL format, you will need to design a set of URL rules according to the actual requirement about how the URLs should look like.</p>
+  <p>栗子(根据需要修改自己的配置)</p>
 </blockquote>
 
-<h3 id="routing">Routing</h3>
+<div class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">guard</span> <span class="s1">&#39;livereload&#39;</span> <span class="k">do</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{app/views/.+\.(erb|haml|slim)}</span><span class="p">)</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{app/helpers/.+\.rb}</span><span class="p">)</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{public/.+\.(css|js|html)}</span><span class="p">)</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{config/locales/.+\.yml}</span><span class="p">)</span>
+  <span class="c1"># Rails Assets Pipeline</span>
+  <span class="n">watch</span><span class="p">(</span><span class="sr">%r{(app|vendor)(/assets/\w+/(.+\.(css|js|html))).*}</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span> <span class="s2">&quot;/assets/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="p">}</span>
+<span class="k">end</span></code></pre></div>
 
-<p><strong>First Step</strong>:</p>
-
-<ul>
-  <li>The incoming request is parsed into a route and the associated query parameters.
-    <ul>
-      <li>When using the default URL format, parsing a request into a route is as simple as getting the value of a GET query parameter named r.</li>
-      <li>When using the pretty URL format, the URL manager will examine the registered URL rules to find matching one that can resolve the request into a route.</li>
-    </ul>
-  </li>
-</ul>
-
-<p><strong>Second Step</strong>:</p>
-
-<ul>
-  <li>A controller action corresponding to the parsed route is created to handle the request.</li>
-</ul>
-
-<h3 id="configure-urlmanager-component">Configure urlManager component</h3>
-
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="p">[</span>
-    <span class="s1">&#39;components&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">&#39;urlManager&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-            <span class="c1">//switch between the two URL formats by toggling the enablePrettyUrl property</span>
-            <span class="s1">&#39;enablePrettyUrl&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-            <span class="s1">&#39;showScriptName&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">&#39;enableStrictParsing&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">&#39;rules&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-                <span class="c1">// ...</span>
-            <span class="p">],</span>
-        <span class="p">],</span>
-    <span class="p">],</span>
-<span class="p">]</span></code></pre></div>
-
+<p>最后运行<code>guard</code> 即可，并在浏览器上点击livereload图标</p>
 
       </article>
       <hr>
@@ -180,7 +154,7 @@
     <div class="post-area post comment">
       <!-- 多说评论框 start -->
       
-      <div class="ds-thread" data-thread-key="/2015/10/23/yii2-request-handler" data-title="Yii2 Request Handler" data-url="gaohaoyang.github.io/2015/10/23/yii2-request-handler/"></div>
+      <div class="ds-thread" data-thread-key="/2015/10/03/guide-livereload" data-title="guide-livereload" data-url="gaohaoyang.github.io/2015/10/03/guide-livereload/"></div>
       
       <!-- 多说评论框 end -->
     </div>

@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Yii2 Request Handler</title>
-	<meta name="description" content="Request Handler and Route in Yii2">
+	<title>Controller as VS Scope In Angular Syntax</title>
+	<meta name="description" content="Controller as">
 
-	<link rel="canonical" href="/2015/10/23/yii2-request-handler/">
+	<link rel="canonical" href="/2015/09/15/controller-as/">
 	<link rel="alternate" type="application/rss+xml" title="Sparks" href="/feed.xml" />
 
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -110,66 +110,88 @@
   <div id="myArticle" class="col-sm-9">
     <div class="post-area post">
       <header>
-        <h1>Yii2 Request Handler</h1>
-        <p>Oct 23, 2015</p>
+        <h1>Controller as VS Scope In Angular Syntax</h1>
+        <p>Sep 15, 2015</p>
       </header>
       <hr>
       <article>
-        <ul id="markdown-toc">
-  <li><a href="#url-formats" id="markdown-toc-url-formats">URL Formats</a></li>
-  <li><a href="#routing" id="markdown-toc-routing">Routing</a></li>
-  <li><a href="#configure-urlmanager-component" id="markdown-toc-configure-urlmanager-component">Configure urlManager component</a></li>
-</ul>
+        <h2 id="controller-as-vs-scope-in-angular-syntax">Controller as VS Scope In Angular Syntax</h2>
 
-<h3 id="url-formats">URL Formats</h3>
-
-<ul>
-  <li>
-    <p><strong>the default URL format</strong> : <code>/index.php?r=post/view&amp;id=100</code></p>
-  </li>
-  <li>
-    <p><strong>pretty URL format</strong>      : <code>/index.php/post/100</code></p>
-  </li>
-</ul>
+<h3 id="difference">Difference</h3>
 
 <blockquote>
-  <p>To use the pretty URL format, you will need to design a set of URL rules according to the actual requirement about how the URLs should look like.</p>
+  <p>$Scope</p>
 </blockquote>
 
-<h3 id="routing">Routing</h3>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">,[])</span>
 
-<p><strong>First Step</strong>:</p>
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s2">&quot;demoController&quot;</span><span class="p">,[</span><span class="s2">&quot;$scope&quot;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">$scope</span><span class="p">){</span>
 
-<ul>
-  <li>The incoming request is parsed into a route and the associated query parameters.
-    <ul>
-      <li>When using the default URL format, parsing a request into a route is as simple as getting the value of a GET query parameter named r.</li>
-      <li>When using the pretty URL format, the URL manager will examine the registered URL rules to find matching one that can resolve the request into a route.</li>
-    </ul>
-  </li>
-</ul>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">&quot;angualr&quot;</span><span class="p">;</span>
 
-<p><strong>Second Step</strong>:</p>
+ <span class="p">}])</span>
 
-<ul>
-  <li>A controller action corresponding to the parsed route is created to handle the request.</li>
-</ul>
+<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">app</span><span class="o">=</span><span class="s2">&quot;app&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">controller</span><span class="o">=</span><span class="s2">&quot;demoController&quot;</span><span class="o">&gt;</span>
+    <span class="nx">hello</span> <span class="o">:</span>  <span class="o">!</span>
+<span class="o">&lt;</span><span class="err">/div&gt;　　</span></code></pre></div>
 
-<h3 id="configure-urlmanager-component">Configure urlManager component</h3>
+<blockquote>
+  <p>Controller as</p>
+</blockquote>
 
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="p">[</span>
-    <span class="s1">&#39;components&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">&#39;urlManager&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-            <span class="c1">//switch between the two URL formats by toggling the enablePrettyUrl property</span>
-            <span class="s1">&#39;enablePrettyUrl&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-            <span class="s1">&#39;showScriptName&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">&#39;enableStrictParsing&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
-            <span class="s1">&#39;rules&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-                <span class="c1">// ...</span>
-            <span class="p">],</span>
-        <span class="p">],</span>
-    <span class="p">],</span>
-<span class="p">]</span></code></pre></div>
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">,[])</span>
+
+<span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s2">&quot;demoController&quot;</span><span class="p">,[</span><span class="kd">function</span><span class="p">(){</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">&quot;angualr&quot;</span><span class="p">;</span>
+
+<span class="p">}])</span>
+
+<span class="o">&lt;</span><span class="nx">div</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">app</span><span class="o">=</span><span class="s2">&quot;app&quot;</span> <span class="nx">ng</span><span class="o">-</span><span class="nx">controller</span><span class="o">=</span><span class="s2">&quot;demoController as demo&quot;</span><span class="o">&gt;</span>
+     <span class="nx">hello</span> <span class="o">:</span>  <span class="o">!</span>
+<span class="o">&lt;</span><span class="err">/div&gt;　</span></code></pre></div>
+
+<blockquote>
+  <p>通过 <code>controller as</code>， 不再需要注入$scope,controller更加靠近POJO，就是一个简单的javascript对象，在view model中可以通过controller的别名来访问数据对象。</p>
+</blockquote>
+
+<p>关于<code>controller as</code> 的<a href="https://github.com/angular/angular.js/blob/c7a1d1ab0b663edffc1ac7b54deea847e372468d/src/ng/compile.js">源码</a></p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="k">if</span> <span class="p">(</span><span class="nx">directive</span><span class="p">.</span><span class="nx">controllerAs</span><span class="p">)</span> <span class="p">{</span>
+         <span class="nx">locals</span><span class="p">.</span><span class="nx">$scope</span><span class="p">[</span><span class="nx">directive</span><span class="p">.</span><span class="nx">controllerAs</span><span class="p">]</span> <span class="o">=</span> <span class="nx">controllerInstance</span><span class="p">;</span>
+<span class="p">}</span><span class="err">　</span></code></pre></div>
+
+<blockquote>
+  <p>angular只是把controller这个对象实例以其as的别名在scope上创建了一个新的对象属性</p>
+</blockquote>
+
+<p>###　栗子</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s2">&quot;app&quot;</span><span class="p">,[])</span>
+
+ <span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s2">&quot;demoController&quot;</span><span class="p">,[</span><span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">vm</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span><span class="o">&lt;</span><span class="nx">br</span><span class="o">&gt;</span>
+        <span class="nx">vm</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">&quot;angualr&quot;</span><span class="p">;</span><span class="o">&lt;</span><span class="nx">br</span><span class="o">&gt;</span>
+        <span class="k">return</span> <span class="nx">vm</span><span class="p">;</span>
+ <span class="p">}])</span></code></pre></div>
+
+<h3 id="what-is-scope">What is scope</h3>
+
+<p>在 AngularJS 中，scope 是一个开放给 partial 的 JavaScript 对象。Scope 可以包含不同的属性 - 基本数据 (primitives)、对象和函数。所有归属于 scope 的函数都可以通过解析该 scope 所对应 partial 中的 AngularJS 表达式来执行，也可以由任何构件直接调用该函数 (使用这种方式将保留指向该 scope 的引用不变)。附属于 scope 的数据可以通过使用合适的 directive 来绑定到视图上，如此一来，所有 partial 中的修改都会映射为某个 scope 属性的变化，反之亦然。</p>
+
+<p>AngularJS 应用中的 scope 还有另一个重要的特质，即它们都被连接到一条原型链 (prototypical chain) 上 (除了那些被表明为独立 (isolated) 的 scope)。在这种方式中，任何子 scope 都能调用属于其父母的函数，因为这些函数是该 scope 的直接或间接原型的属性。</p>
+
+<h3 id="why-use-controller-as">Why use <code>controller as</code>?</h3>
+
+<ol>
+  <li>定义vm这样会让我们更好的避免JavaScript的this的坑。</li>
+  <li>如果某个版本的angular不再支持controller as,可以轻易的注入$scope,修改为 var vm = $scope;</li>
+  <li>因为不再注入$scope了，controller更加的POJO，就是一个很普通的JavaScript对象。</li>
+  <li>也因为没有了$scope，而controller实例将会成为scope上的一个属性，所以在controller中我们再也不能使用$watch,$emit,$on之类的特殊方法，因为这些东西往往不该出现在controller中的，更好的控制。</li>
+  <li>因为controller实例将会只是$scope的一个属性，所以view模板上的所有字段都会在一个引用的属性上，这可以避开JavaScript原型链继承对于值类型的坑。<a href="https://github.com/angular/angular.js/wiki/Understanding-Scopes">related to</a>.</li>
+  <li>controller as 对于 coffescript,liveScript更友好。</li>
+  <li>模板上定义的每个字段方法都会在scope寄存在controller as别名上的引用上，所以在controller继承中，不会在出现命名冲突的问题。</li>
+</ol>
 
 
       </article>
@@ -180,7 +202,7 @@
     <div class="post-area post comment">
       <!-- 多说评论框 start -->
       
-      <div class="ds-thread" data-thread-key="/2015/10/23/yii2-request-handler" data-title="Yii2 Request Handler" data-url="gaohaoyang.github.io/2015/10/23/yii2-request-handler/"></div>
+      <div class="ds-thread" data-thread-key="/2015/09/15/controller-as" data-title="Controller as VS Scope In Angular Syntax" data-url="gaohaoyang.github.io/2015/09/15/controller-as/"></div>
       
       <!-- 多说评论框 end -->
     </div>

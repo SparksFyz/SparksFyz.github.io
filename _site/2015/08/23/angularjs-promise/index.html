@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Angularjs Promise & Design Patterns</title>
+	<meta name="description" content="Promise">
+
+	<link rel="canonical" href="/2015/08/23/angularjs-promise/">
+	<link rel="alternate" type="application/rss+xml" title="Sparks" href="/feed.xml" />
+
+	<!-- <link rel="stylesheet" href="/css/main.css"> -->
+
+	<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/fontawesome/4.2.0/css/font-awesome.min.css"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"> -->
+
+
+	<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/about.css">
+	<!-- <script type="text/javascript" src="/static/js/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script> -->
+
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/static/js/index.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai_sublime.min.css">
+	<!-- <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/railscasts.min.css"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="http://apps.bdimg.com/libs/highlight.js/8.4/styles/monokai.min.css"> -->
+	<!-- <script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/languages/dos.min.js"></script> -->
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/highlight.js/8.4/highlight.min.js"></script>
+	<script>hljs.initHighlightingOnLoad();</script>
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?b636473d6ffa17615f94e5db1459ea81";
+	  var s = document.getElementsByTagName("script")[0];
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+</head>
+
+ <!--  <body data-spy="scroll" data-target="#myAffix"> -->
+  <body>
+
+    <header>
+
+<!-- navbar -->
+  <nav class="navbar navbar-inverse">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Sparks</a>
+      <p class="navbar-text">Front-end Dev Engineer</p>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
+        
+          <li>
+        
+          <a href="/"><span class="glyphicon glyphicon-th-large"></span> Home</a></li>
+
+        
+          
+            
+              <li>
+            
+            <a href="/project/"><span class="glyphicon glyphicon-fire"></span> Project</a></li>
+          
+        
+          
+            
+              <li>
+            
+            <a href="/about/"><span class="glyphicon glyphicon-heart"></span> About</a></li>
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+</header>
+
+
+    <div id="main" class="container main">
+      <div class="row">
+  <div id="myArticle" class="col-sm-9">
+    <div class="post-area post">
+      <header>
+        <h1>Angularjs Promise & Design Patterns</h1>
+        <p>Aug 23, 2015</p>
+      </header>
+      <hr>
+      <article>
+        <h2 id="angularjs-promise--design-patterns">Angularjs Promise &amp; Design Patterns</h2>
+
+<h3 id="what-is-promise">What is Promise</h3>
+
+<p>promise在angular中是一个接口,但它不是angular首创的,<br />
+而是作为一种编程模式,比js还要古老得多,promise全称是 Futures and promises。<br />
+有兴趣可以可以看看<a href="http://en.wikipedia.org/wiki/Futures_and_promises">Futures and promises</a>。</p>
+
+<p>在javascript中，promise是一种异步处理模式,用来解决异步编程问题.<br />
+Javascript中有一个库叫做<a href="https://github.com/kriskowal/q">Q</a>,而angularjs用promise实现的$q服务就是从Q引入的．</p>
+
+<p>简单的状态图：</p>
+
+<p><img src="/static/image/promise.png" alt="promise" /></p>
+
+<p>Promise 背后的概念大致有两部分:</p>
+
+<p>Deferreds，定义工作单元，<br />
+Promises，从 Deferreds 返回的数据。</p>
+
+<p>Deferred对象可以看做是一个通信对象，用来定义工作单元的开始，处理和结束三部分。</p>
+
+<p>Promise 是 Deferred 响应数据的输出；它有状态 (等待，执行和拒绝)，以及句柄，或叫做回调函数，反正就是那些在 Promise 执行，拒绝或者提示进程中会被调用的方法。</p>
+
+<p>Promise 不同于回调的很重要的一个点是，你可以在 Promise 状态变成执行(resolved)之后追加处理句柄。这就允许你传输数据，而忽略它是否已经被应用获取，然后缓存它，等等之类的操作，因此你可以对数据执行操作，而不管它是否已经或者即将可用。</p>
+
+<h3 id="section">一个形象的栗子</h3>
+
+<blockquote>
+  <p>关键词 : $q.defer()  $q.all()  $q.when()  deferred  deferred.resolve() ….</p>
+</blockquote>
+
+<p>假设有一个家具厂，而它有一个VIP客户张先生。</p>
+
+<p>有一天张先生需要一个豪华衣柜，于是，他打电话给家具厂说我需要一个衣柜，回头做好了给我送来，这个操作就叫$q.defer，也就是延期，因为这个衣柜不是现在要的，所以张先生这是在发起一个可延期的请求。</p>
+
+<p>同时，家具厂给他留下了一个回执号，并对他说：我们做好了会给您送过去，放心吧。这叫做promise，也就是承诺。</p>
+
+<p>这样，这个defer算是正式创建了，于是他把这件事记录在自己的日记上，并且同时记录了回执号，这叫做deferred，也就是已延期事件。</p>
+
+<p>现在，张先生就不用再去想着这件事了，该做什么做什么，这就是“异步”的含义。</p>
+
+<p>假设家具厂在一周后做完了这个衣柜，并如约送到了张先生家（包邮哦，亲），这就叫做deferred.resolve(衣柜)，也就是“已解决”。而这时候张先生只要签收一下这个（衣柜）参数就行了，当然，这个“邮包”中也不一定只有衣柜，还可以包含别的东西，比如厂家宣传资料、产品名录等。整个过程中轻松愉快，谁也没等谁，没有浪费任何时间。</p>
+
+<p>假设家具厂在评估后发现这个规格的衣柜我们做不了，那么它就需要deferred.reject(理由)，也就是“拒绝”。拒绝没有时间限制，可以发生在给出承诺之后的任何时候，甚至可能发生在快做完的时候。而且拒绝时候的参数也不仅仅限于理由，还可以包含一个道歉信，违约金之类的，总之，你想给他什么就给他什么，如果你觉得不会惹恼客户，那么不给也没关系。</p>
+
+<p>假设家具厂发现，自己正好有一个符合张先生要求的存货，它就可以用$q.when(现有衣柜)来把这个承诺给张先生，这件事就立即被解决了，皆大欢喜，张先生可不在乎你是从头做的还是现有的成品，只会惊叹于你们的效率之高。</p>
+
+<p>假设这个家具厂对客户格外的细心，它还可能通过deferred.notify(进展情况)给张先生发送进展情况的“通知”。</p>
+
+<p>这样，整个异步流程就圆满完成，无论成功或者失败，张先生都没有往里面投入任何额外的时间成本。</p>
+
+<p>好，我们再扩展一下这个故事：</p>
+
+<p>张先生这次需要做一个桌子，三把椅子，一张席梦思，但是他不希望今天收到个桌子，明天收到个椅子，后天又得签收一次席梦思，而是希望家具厂做好了之后一次性送过来，但是他下单的时候又是分别下单的，那么他就可以重新跟家具厂要一个包含上述三个承诺的新承诺，这就是$q.all(桌子承诺，椅子承诺，席梦思承诺)，这样，他就不用再关注以前的三个承诺了，直接等待这个新的承诺完成，到时候只要一次性签收了前面的这些承诺就行了。</p>
+
+<blockquote>
+  <p>上面这个栗子提到的promise就是angular中$q的实现</p>
+</blockquote>
+
+<p>首先我们创建一个对象：<br />
++ $q.defer()，用来创建一个新的 Deferred 对象<br />
++ $q.all()，允许你等待并行的 promise 处理，当所有的 promise 都被处理结束之后，调用共同的回调<br />
++ $q.when()，如果你想通过一个普通变量创建一个 promise ，或者你不清楚你要处理的对象是不是 promise 时非常有用</p>
+
+<blockquote>
+  <p>$q.defer() 返回一个 Deferred 对象</p>
+</blockquote>
+
+<p>Deferrred带有的方法和属性：</p>
+
+<ul>
+  <li>
+    <p>resolve(), reject(), 和 notify()</p>
+  </li>
+  <li>
+    <p>Deferred 还有一个 promise 属性，这是一个 promise对象，可以用于应用内部传递,这个对象有.then()这个方法，是唯一 Promise 规范要求的方法，<br />
+用三个回调方法作为参数；一个成功回调，一个失败回调，还有一个状态变化回调。对应上面的deferred.resolve(),deferrred.reject()和deferred.notify()</p>
+  </li>
+</ul>
+
+<h3 id="section-1">实际应用的栗子</h3>
+
+<blockquote>
+  <p>创建一个service 用来向服务端请求数据</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">App</span><span class="p">.</span><span class="nx">factory</span><span class="p">(</span><span class="s1">&#39;ProductInfo&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$http&#39;</span><span class="p">,</span> <span class="s1">&#39;$q&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$http</span><span class="p">,</span> <span class="nx">$q</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">query</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span> <span class="c1">// 声明延后执行，表示要去监控后面的执行</span>
+      <span class="nx">$http</span><span class="p">({</span><span class="nx">method</span><span class="o">:</span> <span class="s1">&#39;POST&#39;</span><span class="p">,</span> <span class="nx">url</span><span class="o">:</span> <span class="s1">&#39;xxxx.php?r=xxController/xxAction&#39;</span><span class="p">}).</span>
+      <span class="nx">success</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>  <span class="c1">// 声明执行成功，即http请求数据成功，可以返回数据了</span>
+      <span class="p">}).</span>
+      <span class="nx">error</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">status</span><span class="p">,</span> <span class="nx">headers</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>   <span class="c1">// 声明执行失败，即服务器返回错误</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>   <span class="c1">// 返回承诺，这里并不是最终数据，而是访问最终数据的API</span>
+    <span class="p">}</span> <span class="c1">// end query</span>
+  <span class="p">};</span>
+<span class="p">}]);</span></code></pre></div>
+
+<blockquote>
+  <p>在Controller中（以同步方式）使用这个Service</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;App&#39;</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;ProductCtrl&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;$scope&#39;</span><span class="p">,</span> <span class="s1">&#39;ProductInfo&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">,</span> <span class="nx">ProductInfo</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 引用我们定义的productInfo服务</span>
+    <span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">ProductInfo</span><span class="p">.</span><span class="nx">query</span><span class="p">();</span> <span class="c1">// 同步调用，获得承诺接口</span>
+    <span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 调用承诺API获取数据 .resolve</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">productInfo</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 处理错误 .reject</span>
+         <span class="c1">//错误处理</span>
+    <span class="p">});</span>
+  <span class="p">}]);</span></code></pre></div>
+
+<blockquote>
+  <p>这里有一个链式promise概念，我们可以在promise后追加多个处理(.then()):</p>
+</blockquote>
+
+<p>例如：</p>
+
+<div class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="nx">$q</span><span class="p">.</span><span class="nx">defer</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">deferred</span><span class="p">.</span><span class="nx">promise</span><span class="p">;</span>
+
+<span class="nx">promise</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+    <span class="k">return</span> <span class="s1">&#39;B&#39;</span><span class="p">;</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+    <span class="k">return</span> <span class="s1">&#39;C&#39;</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+   <span class="p">});</span>
+
+<span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">);</span></code></pre></div>
+
+<p>output:</p>
+
+<p>A<br />
+B<br />
+C</p>
+
+<h3 id="promise-js">Promise 相较于js中回调的优点</h3>
+<p>对比使用Promise前后我们可以发现，传统异步编程通过嵌套回调函数的方式，等待异步操作结束后再执行下一步操作。过多的嵌套导致意大利面条式的代码，可读性差、耦合度高、扩展性低。<br />
+通过Promise机制，扁平化的代码机构，大大提高了代码可读性；用同步编程的方式来编写异步代码，保存线性的代码逻辑，极大的降低了代码耦合性而提高了程序的可扩展性。</p>
+
+<blockquote>
+  <p>暂时还没有用过$q.all() 和$q.when() ,有机会再补充….</p>
+</blockquote>
+
+<h3 id="token-promiseinterceptor">结合token ,Promise实现Interceptor</h3>
+
+<blockquote>
+  <p>　　以前写过一点这部分的代码，可惜搞丢了,过段时间补上来..</p>
+</blockquote>
+
+<p>未完待续</p>
+
+
+      </article>
+      <hr>
+      <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a><a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a><a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a></div>
+      <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+    </div>
+    <div class="post-area post comment">
+      <!-- 多说评论框 start -->
+      
+      <div class="ds-thread" data-thread-key="/2015/08/23/angularjs-promise" data-title="Angularjs Promise & Design Patterns" data-url="gaohaoyang.github.io/2015/08/23/angularjs-promise/"></div>
+      
+      <!-- 多说评论框 end -->
+    </div>
+  </div>
+
+  <div id="content" class="col-sm-3">
+    <!-- <div id="myAffix" class="shadow-bottom-center hidden-xs" data-spy="affix" data-offset-top="0" data-offset-bottom="-20"> -->
+    <div id="myAffix" class="shadow-bottom-center hidden-xs" >
+      <div class="categories-list-header">
+        Content
+      </div>
+      <div class="content-text"></div>
+    </div>
+  </div>
+</div>
+    </div>
+
+
+    <div id="top" data-toggle="tooltip" data-placement="left" title="回到顶部">
+      <a href="javascript:;">
+        <div class="arrow"></div>
+        <div class="stick"></div>
+      </a>
+    </div>
+
+    <footer class="">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <a href="mailto:sparksvann@gmail.com"><span class="glyphicon glyphicon-envelope"></span> sparksvann@gmail.com</a>
+        <span class="point"> · </span>
+        
+
+          <a href="https://github.com/Sparksfyz">
+            <span class="icon">
+              <svg viewBox="0 0 16 16">
+                <path fill="#aaa" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+              </svg>
+            </span>
+            Github
+            <!-- <span>Sparksfyz</span> -->
+          </a>
+
+          
+          <span class="point"> · </span>
+          <!-- <span><a href="/feed.xml">RSS</a></span> -->
+          <!-- <span class="point"> · </span> -->
+          <span>一只野生的切图仔</span>
+          <span class="point"> · </span>
+          <span>&copy; 2015 Sparks</span>
+          <span class="point"> · </span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"hygblog"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+<!-- 多说公共JS代码 end -->
+
+<!-- 在新窗口中打开 -->
+  <script type="text/javascript">
+    function addBlankTargetForLinks () {
+      $('a[href^="http"]').each(function(){
+          $(this).attr('target', '_blank');
+      });
+    }
+    //每次在有DOM插入时触发
+    $(document).bind('DOMNodeInserted', function(event) {
+      addBlankTargetForLinks();
+    });
+  </script>
+  </body>
+</html>
