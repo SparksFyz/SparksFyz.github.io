@@ -116,10 +116,126 @@
       <hr>
       <article>
         <ul id="markdown-toc">
-  <li><a href="#url-formats" id="markdown-toc-url-formats">URL Formats</a></li>
-  <li><a href="#routing" id="markdown-toc-routing">Routing</a></li>
-  <li><a href="#configure-urlmanager-component" id="markdown-toc-configure-urlmanager-component">Configure urlManager component</a></li>
+  <li><a href="#bootsrapping" id="markdown-toc-bootsrapping">Bootsrapping</a></li>
+  <li><a href="#routing" id="markdown-toc-routing">Routing</a>    <ul>
+      <li><a href="#url-formats" id="markdown-toc-url-formats">URL Formats</a></li>
+      <li><a href="#routing-process" id="markdown-toc-routing-process">Routing Process</a></li>
+      <li><a href="#configure-urlmanager-component" id="markdown-toc-configure-urlmanager-component">Configure urlManager component</a></li>
+    </ul>
+  </li>
 </ul>
+
+<blockquote>
+  <p>Request handling can be divided into two steps:</p>
+</blockquote>
+
+<ul>
+  <li><strong>Bootstrapping</strong></li>
+  <li><strong>Routing</strong></li>
+</ul>
+
+<h2 id="bootsrapping">Bootsrapping</h2>
+
+<blockquote>
+  <p>Bootstrapping is before an application starts to resolve and process an incoming request.</p>
+</blockquote>
+
+<p>启动引导会在两个地方具体进行：</p>
+
+<ul>
+  <li>Entry Script(web/index.php)
+    <ul>
+      <li>引入composer和Yii的autoloader</li>
+      <li>加载configuration 并创建一个application的实例。</li>
+    </ul>
+  </li>
+  <li>应用主体（application）：
+    <ul>
+      <li>生成application实例，参见下面的<code>yii/base/application</code>中的构造函数，</li>
+      <li><code>yii/base/application</code>中的init()方法会调用bootstrap()方法从而bootstapping components.</li>
+    </ul>
+  </li>
+</ul>
+
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="x">public function __construct($config = [])</span>
+<span class="x">    {</span>
+<span class="x">        //这里的config[]参见config/main.php</span>
+<span class="x">        Yii::$app = $this;</span>
+<span class="x">        //生成一个application实例</span>
+<span class="x">        $this-&gt;setInstance($this);</span>
+
+<span class="x">        $this-&gt;state = self::STATE_BEGIN;</span>
+<span class="x">        //preInit(&amp;$config)方法会初始化一些重要的app属性，</span>
+<span class="x">        //例如`id`，`basePath`,并将core components和custom components合并</span>
+<span class="x">        $this-&gt;preInit($config);</span>
+<span class="x">        //注册ErrorHandler</span>
+<span class="x">        $this-&gt;registerErrorHandler($config);</span>
+<span class="x">        //初始化配置的component的属性</span>
+<span class="x">        Component::__construct($config);</span>
+<span class="x">    }</span>
+
+<span class="x">    public function init()</span>
+<span class="x">    {</span>
+<span class="x">        $this-&gt;state = self::STATE_INIT;</span>
+<span class="x">        $this-&gt;bootstrap();</span>
+<span class="x">    }</span>
+
+<span class="x">    protected function bootstrap()</span>
+<span class="x">    {</span>
+<span class="x">        if ($this-&gt;extensions === null) {</span>
+<span class="x">            //加载扩展清单文件(extension manifest file) vendor/yiisoft/extensions.php</span>
+<span class="x">            //在里面可以看到需要的扩展依赖配置</span>
+<span class="x">            //例如yii2-codeception yii2-redis yii2-mongodb yii2-faker</span>
+<span class="x">            $file = Yii::getAlias(&#39;@vendor/yiisoft/extensions.php&#39;);</span>
+<span class="x">            $this-&gt;extensions = is_file($file) ? include($file) : [];</span>
+<span class="x">        }</span>
+<span class="x">        foreach ($this-&gt;extensions as $extension) {</span>
+<span class="x">            if (!empty($extension[&#39;alias&#39;])) {</span>
+<span class="x">                foreach ($extension[&#39;alias&#39;] as $name =&gt; $path) {</span>
+<span class="x">                    Yii::setAlias($name, $path);</span>
+<span class="x">                }</span>
+<span class="x">            }</span>
+<span class="x">            //创建并运行各个扩展声明的 引导组件(bootstrap components)。</span>
+<span class="x">            if (isset($extension[&#39;bootstrap&#39;])) {</span>
+<span class="x">                $component = Yii::createObject($extension[&#39;bootstrap&#39;]);</span>
+<span class="x">                if ($component instanceof BootstrapInterface) {</span>
+<span class="x">                    Yii::trace(&quot;Bootstrap with &quot; . get_class($component) . &#39;::bootstrap()&#39;, __METHOD__);</span>
+<span class="x">                    $component-&gt;bootstrap($this);</span>
+<span class="x">                } else {</span>
+<span class="x">                    Yii::trace(&quot;Bootstrap with &quot; . get_class($component), __METHOD__);</span>
+<span class="x">                }</span>
+<span class="x">            }</span>
+<span class="x">        }</span>
+<span class="x">        //创建并运行各个应用组件以及在应用的Bootstrap属性中声明的modules组件</span>
+<span class="x">        //例如config/main.php中的&#39;bootstrap&#39; =&gt; [&#39;log&#39;]</span>
+<span class="x">        //log 组件必须在 bootstrapping 期间就被加载，以便于它能够及时调度日志消息到目标里。</span>
+<span class="x">        foreach ($this-&gt;bootstrap as $class) {</span>
+<span class="x">            $component = null;</span>
+<span class="x">            if (is_string($class)) {</span>
+<span class="x">                if ($this-&gt;has($class)) {</span>
+<span class="x">                    $component = $this-&gt;get($class);</span>
+<span class="x">                } elseif ($this-&gt;hasModule($class)) {</span>
+<span class="x">                    $component = $this-&gt;getModule($class);</span>
+<span class="x">                } elseif (strpos($class, &#39;\\&#39;) === false) {</span>
+<span class="x">                    throw new InvalidConfigException(&quot;Unknown bootstrapping component ID: $class&quot;);</span>
+<span class="x">                }</span>
+<span class="x">            }</span>
+<span class="x">            if (!isset($component)) {</span>
+<span class="x">                $component = Yii::createObject($class);</span>
+<span class="x">            }</span>
+
+<span class="x">            if ($component instanceof BootstrapInterface) {</span>
+<span class="x">                Yii::trace(&quot;Bootstrap with &quot; . get_class($component) . &#39;::bootstrap()&#39;, __METHOD__);</span>
+<span class="x">                $component-&gt;bootstrap($this);</span>
+<span class="x">            } else {</span>
+<span class="x">                Yii::trace(&quot;Bootstrap with &quot; . get_class($component), __METHOD__);</span>
+<span class="x">            }</span>
+<span class="x">        }</span>
+<span class="x">    }</span></code></pre></div>
+
+<hr />
+
+<h2 id="routing">Routing</h2>
 
 <h3 id="url-formats">URL Formats</h3>
 
@@ -136,7 +252,7 @@
   <p>To use the pretty URL format, you will need to design a set of URL rules according to the actual requirement about how the URLs should look like.</p>
 </blockquote>
 
-<h3 id="routing">Routing</h3>
+<h3 id="routing-process">Routing Process</h3>
 
 <p><strong>First Step</strong>:</p>
 
@@ -162,7 +278,9 @@
         <span class="s1">&#39;urlManager&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
             <span class="c1">//switch between the two URL formats by toggling the enablePrettyUrl property</span>
             <span class="s1">&#39;enablePrettyUrl&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+            <span class="c1">//hide the entry script name(index.php) in the created URLs,</span>
             <span class="s1">&#39;showScriptName&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+            <span class="c1">//determines whether to enable strict request parsing</span>
             <span class="s1">&#39;enableStrictParsing&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
             <span class="s1">&#39;rules&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
                 <span class="c1">// ...</span>

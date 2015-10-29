@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Yii2 application & component</title>
-	<meta name="description" content="application and component in Yii2">
+	<title>Yii2 Request Lifecycle</title>
+	<meta name="description" content="Yii2 Request Lifecycle">
 
-	<link rel="canonical" href="/2015/08/01/yii2-application/">
+	<link rel="canonical" href="/2015/10/29/yii-request-lifecycle/">
 	<link rel="alternate" type="application/rss+xml" title="Sparks" href="/feed.xml" />
 
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -110,22 +110,13 @@
   <div id="myArticle" class="col-sm-9">
     <div class="post-area post">
       <header>
-        <h1>Yii2 application & component</h1>
-        <p>Aug 1, 2015</p>
+        <h1>Yii2 Request Lifecycle</h1>
+        <p>Oct 29, 2015</p>
       </header>
       <hr>
       <article>
         <ul id="markdown-toc">
   <li><a href="#request-lifecycle" id="markdown-toc-request-lifecycle">Request Lifecycle</a></li>
-  <li><a href="#entry-scripts-mainly-do-the-following-work" id="markdown-toc-entry-scripts-mainly-do-the-following-work">Entry scripts mainly do the following work</a>    <ul>
-      <li><a href="#in-web-application" id="markdown-toc-in-web-application">栗子 in web application</a></li>
-    </ul>
-  </li>
-  <li><a href="#application-components" id="markdown-toc-application-components">Application Components</a></li>
-  <li><a href="#core-application-components" id="markdown-toc-core-application-components">Core Application Components</a>    <ul>
-      <li><a href="#yiibaseapplication" id="markdown-toc-yiibaseapplication"><code>yii/base/application</code></a></li>
-    </ul>
-  </li>
 </ul>
 
 <h3 id="request-lifecycle">Request Lifecycle</h3>
@@ -147,98 +138,7 @@
   <li>The response component sends the rendered result to the user’s browser.</li>
 </ol>
 
-<h3 id="entry-scripts-mainly-do-the-following-work">Entry scripts mainly do the following work</h3>
-
-<blockquote>
-  <blockquote>
-    <p>Web application and console application both have entry scripts like index.php</p>
-  </blockquote>
-</blockquote>
-
-<ul>
-  <li>Define global constants;</li>
-  <li>Register Composer autoloader;</li>
-  <li>Include the Yii class file;</li>
-  <li>Load application configuration;</li>
-  <li>Create and configure an application instance;</li>
-  <li>Call yii\base\Application::run() to process the incoming request.</li>
-</ul>
-
-<h4 id="in-web-application">栗子 in web application</h4>
-
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;YII_DEBUG&#39;</span><span class="p">)</span> <span class="k">or</span> <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;YII_DEBUG&#39;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-<span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;YII_ENV&#39;</span><span class="p">)</span> <span class="k">or</span> <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;YII_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;dev&#39;</span><span class="p">);</span>
-
-<span class="c1">// register Composer autoloader</span>
-<span class="k">require</span><span class="p">(</span><span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/../vendor/autoload.php&#39;</span><span class="p">);</span>
-
-<span class="c1">// include Yii class file</span>
-<span class="k">require</span><span class="p">(</span><span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/../vendor/yiisoft/yii2/Yii.php&#39;</span><span class="p">);</span>
-
-<span class="c1">// load application configuration</span>
-<span class="nv">$config</span> <span class="o">=</span> <span class="k">require</span><span class="p">(</span><span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/../config/web.php&#39;</span><span class="p">);</span>
-
-<span class="c1">// create, configure and run application</span>
-<span class="p">(</span><span class="k">new</span> <span class="nx">yii\web\Application</span><span class="p">(</span><span class="nv">$config</span><span class="p">))</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span></code></pre></div>
-
-<h3 id="application-components">Application Components</h3>
-
-<p>we can access to components by <code>\Yii::$app-&gt;componentID</code>,like <code>\Yii::$app-&gt;db</code> .</p>
-
-<ul>
-  <li>The following application configuration makes sure the log component is always loaded in every application:</li>
-</ul>
-
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="p">[</span>
-    <span class="s1">&#39;bootstrap&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">&#39;log&#39;</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="s1">&#39;components&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">&#39;log&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-            <span class="c1">// configuration for &quot;log&quot; component</span>
-        <span class="p">],</span>
-    <span class="p">],</span>
-<span class="p">]</span></code></pre></div>
-
-<h3 id="core-application-components">Core Application Components</h3>
-
-<ul>
-  <li>db</li>
-  <li>errorHandler</li>
-  <li>log</li>
-  <li>mail</li>
-  <li>urlManager</li>
-  <li>response</li>
-  <li>request</li>
-  <li>user</li>
-  <li>view</li>
-  <li>assetManager</li>
-  <li>formatter</li>
-  <li>i18n</li>
-  <li>session</li>
-</ul>
-
-<h4 id="yiibaseapplication"><code>yii/base/application</code></h4>
-
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="x">/**</span>
-<span class="x">     * Returns the configuration of core application components.</span>
-<span class="x">     * @see set()</span>
-<span class="x">     */</span>
-<span class="x">    public function coreComponents()</span>
-<span class="x">    {</span>
-<span class="x">        return [</span>
-<span class="x">            &#39;log&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\log\Dispatcher&#39;],</span>
-<span class="x">            &#39;view&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\web\View&#39;],</span>
-<span class="x">            &#39;formatter&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\i18n\Formatter&#39;],</span>
-<span class="x">            &#39;i18n&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\i18n\I18N&#39;],</span>
-<span class="x">            &#39;mailer&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\swiftmailer\Mailer&#39;],</span>
-<span class="x">            &#39;urlManager&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\web\UrlManager&#39;],</span>
-<span class="x">            &#39;assetManager&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\web\AssetManager&#39;],</span>
-<span class="x">            &#39;security&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\base\Security&#39;],</span>
-<span class="x">        ];</span>
-<span class="x">    }pr</span></code></pre></div>
-
+<p><img src="/static/image/request-lifecycle.png" alt="request-lifecycle" /></p>
 
       </article>
       <hr>
@@ -248,7 +148,7 @@
     <div class="post-area post comment">
       <!-- 多说评论框 start -->
       
-      <div class="ds-thread" data-thread-key="/2015/08/01/yii2-application" data-title="Yii2 application & component" data-url="gaohaoyang.github.io/2015/08/01/yii2-application/"></div>
+      <div class="ds-thread" data-thread-key="/2015/10/29/yii-request-lifecycle" data-title="Yii2 Request Lifecycle" data-url="gaohaoyang.github.io/2015/10/29/yii-request-lifecycle/"></div>
       
       <!-- 多说评论框 end -->
     </div>

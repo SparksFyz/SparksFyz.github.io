@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Yii2 application & component</title>
-	<meta name="description" content="application and component in Yii2">
+	<title>Yii2 Authentication</title>
+	<meta name="description" content="Yii2 Authentication">
 
-	<link rel="canonical" href="/2015/08/01/yii2-application/">
+	<link rel="canonical" href="/2015/10/29/yii-Authentication/">
 	<link rel="alternate" type="application/rss+xml" title="Sparks" href="/feed.xml" />
 
 	<!-- <link rel="stylesheet" href="/css/main.css"> -->
@@ -110,135 +110,104 @@
   <div id="myArticle" class="col-sm-9">
     <div class="post-area post">
       <header>
-        <h1>Yii2 application & component</h1>
-        <p>Aug 1, 2015</p>
+        <h1>Yii2 Authentication</h1>
+        <p>Oct 29, 2015</p>
       </header>
       <hr>
       <article>
         <ul id="markdown-toc">
-  <li><a href="#request-lifecycle" id="markdown-toc-request-lifecycle">Request Lifecycle</a></li>
-  <li><a href="#entry-scripts-mainly-do-the-following-work" id="markdown-toc-entry-scripts-mainly-do-the-following-work">Entry scripts mainly do the following work</a>    <ul>
-      <li><a href="#in-web-application" id="markdown-toc-in-web-application">栗子 in web application</a></li>
-    </ul>
-  </li>
-  <li><a href="#application-components" id="markdown-toc-application-components">Application Components</a></li>
-  <li><a href="#core-application-components" id="markdown-toc-core-application-components">Core Application Components</a>    <ul>
-      <li><a href="#yiibaseapplication" id="markdown-toc-yiibaseapplication"><code>yii/base/application</code></a></li>
+  <li><a href="#authentication" id="markdown-toc-authentication">Authentication</a>    <ul>
+      <li><a href="#configuring-yiiwebuser" id="markdown-toc-configuring-yiiwebuser">Configuring <code>yii\web\User</code></a></li>
+      <li><a href="#implementing-yiiwebidentityinterface" id="markdown-toc-implementing-yiiwebidentityinterface">Implementing <code>yii\web\IdentityInterface</code></a></li>
+      <li><a href="#authentication-events" id="markdown-toc-authentication-events">Authentication Events</a></li>
     </ul>
   </li>
 </ul>
 
-<h3 id="request-lifecycle">Request Lifecycle</h3>
-
-<ol>
-  <li>make a request to entry script(index.php).</li>
-  <li>entry script loads the app.config and creates an application instance to handle the request.</li>
-  <li>app can resolve requested route by request components like urlmanager</li>
-  <li>Then app will create a controller instance.</li>
-  <li>controller creates an action instance and performs the filters for the action.
-    <ul>
-      <li>If any filter fails, the action is cancelled.</li>
-      <li>If all filters pass, the action is executed.</li>
-    </ul>
-  </li>
-  <li>action loads a data model from database.</li>
-  <li>action renders a view, providing it with the data model.</li>
-  <li>The rendered result is returned to the response application component.</li>
-  <li>The response component sends the rendered result to the user’s browser.</li>
-</ol>
-
-<h3 id="entry-scripts-mainly-do-the-following-work">Entry scripts mainly do the following work</h3>
+<h2 id="authentication">Authentication</h2>
 
 <blockquote>
-  <blockquote>
-    <p>Web application and console application both have entry scripts like index.php</p>
-  </blockquote>
+  <p>Yii provides an authentication framework which wires up various components to support login.</p>
+</blockquote>
+
+<p>To use this framework, just follow this two steps:</p>
+
+<ul>
+  <li>Configure the user application component;</li>
+  <li>Create a class that implements the yii\web\IdentityInterface interface.</li>
+</ul>
+
+<h3 id="configuring-yiiwebuser">Configuring <code>yii\web\User</code></h3>
+
+<blockquote>
+  <p>user是yii自带的component, 可以用来管理用户的认证状态.</p>
+</blockquote>
+
+<p>在config下的 <strong>User</strong> 数组中指定一个<code>identityClass</code></p>
+
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="x">return [</span>
+<span class="x">    //......</span>
+<span class="x">    //......</span>
+<span class="x">    &#39;components&#39; =&gt; [</span>
+<span class="x">        &#39;user&#39; =&gt; [</span>
+<span class="x">            &#39;identityClass&#39; =&gt; &#39;app\models\User&#39;,</span>
+<span class="x">            //如果开启自动登录yii\web\User::enableAutoLogin,</span>
+<span class="x">            //则基于cookie登录,它将使用cookie保存用户身份，这样只要cookie有效就可以恢复登录状态。</span>
+<span class="x">            &#39;enableAutoLogin&#39; =&gt; true,</span>
+<span class="x">            //同理，enableSession</span>
+<span class="x">        ],</span>
+<span class="x">    ],</span>
+<span class="x">];</span></code></pre></div>
+
+<hr />
+
+<h3 id="implementing-yiiwebidentityinterface">Implementing <code>yii\web\IdentityInterface</code></h3>
+
+<blockquote>
+  <p>根据应用的具体的需要来实现接口中方法</p>
 </blockquote>
 
 <ul>
-  <li>Define global constants;</li>
-  <li>Register Composer autoloader;</li>
-  <li>Include the Yii class file;</li>
-  <li>Load application configuration;</li>
-  <li>Create and configure an application instance;</li>
-  <li>Call yii\base\Application::run() to process the incoming request.</li>
+  <li>findIdentity()
+    <ul>
+      <li>根据指定的用户ID查找identityClass实例，当使用session来维持登录状态的时候会用到这个方法</li>
+    </ul>
+  </li>
+  <li>findIdentityByAccessToken()
+    <ul>
+      <li>根据指定的存取令牌查找identityClass实例，该方法用于通过单个加密令牌认证用户的时候（比如无状态的RESTful应用）</li>
+    </ul>
+  </li>
+  <li>getId()
+    <ul>
+      <li>获取该认证实例表示的用户的ID</li>
+    </ul>
+  </li>
+  <li>getAuthKey()
+    <ul>
+      <li>获取基于cookie登录时使用的认证密钥(在config进行配置)</li>
+      <li>认证密钥储存在cookie里并且将来会与服务端的版本进行比较以确保cookie的有效性。</li>
+    </ul>
+  </li>
+  <li>validateAuthKey()
+    <ul>
+      <li>是基于cookie登录密钥验证的逻辑的实现</li>
+    </ul>
+  </li>
 </ul>
 
-<h4 id="in-web-application">栗子 in web application</h4>
+<blockquote>
+  <p>例如，你的项目只是一个无状态的RESTful应用，只需实现findIdentityByAccessToken()和getId()方法login</p>
+</blockquote>
 
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="o">&lt;?</span><span class="nx">php</span>
-<span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;YII_DEBUG&#39;</span><span class="p">)</span> <span class="k">or</span> <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;YII_DEBUG&#39;</span><span class="p">,</span> <span class="k">true</span><span class="p">);</span>
-<span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;YII_ENV&#39;</span><span class="p">)</span> <span class="k">or</span> <span class="nb">define</span><span class="p">(</span><span class="s1">&#39;YII_ENV&#39;</span><span class="p">,</span> <span class="s1">&#39;dev&#39;</span><span class="p">);</span>
-
-<span class="c1">// register Composer autoloader</span>
-<span class="k">require</span><span class="p">(</span><span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/../vendor/autoload.php&#39;</span><span class="p">);</span>
-
-<span class="c1">// include Yii class file</span>
-<span class="k">require</span><span class="p">(</span><span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/../vendor/yiisoft/yii2/Yii.php&#39;</span><span class="p">);</span>
-
-<span class="c1">// load application configuration</span>
-<span class="nv">$config</span> <span class="o">=</span> <span class="k">require</span><span class="p">(</span><span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/../config/web.php&#39;</span><span class="p">);</span>
-
-<span class="c1">// create, configure and run application</span>
-<span class="p">(</span><span class="k">new</span> <span class="nx">yii\web\Application</span><span class="p">(</span><span class="nv">$config</span><span class="p">))</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span></code></pre></div>
-
-<h3 id="application-components">Application Components</h3>
-
-<p>we can access to components by <code>\Yii::$app-&gt;componentID</code>,like <code>\Yii::$app-&gt;db</code> .</p>
+<h3 id="authentication-events">Authentication Events</h3>
 
 <ul>
-  <li>The following application configuration makes sure the log component is always loaded in every application:</li>
+  <li><code>EVENT_BEFORE_LOGIN</code></li>
+  <li><code>EVENT_AFTER_LOGIN</code></li>
+  <li><code>EVENT_BEFORE_LOGOUT</code></li>
+  <li><code>EVENT_AFTER_LOGOUT</code></li>
 </ul>
-
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="p">[</span>
-    <span class="s1">&#39;bootstrap&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">&#39;log&#39;</span><span class="p">,</span>
-    <span class="p">],</span>
-    <span class="s1">&#39;components&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-        <span class="s1">&#39;log&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-            <span class="c1">// configuration for &quot;log&quot; component</span>
-        <span class="p">],</span>
-    <span class="p">],</span>
-<span class="p">]</span></code></pre></div>
-
-<h3 id="core-application-components">Core Application Components</h3>
-
-<ul>
-  <li>db</li>
-  <li>errorHandler</li>
-  <li>log</li>
-  <li>mail</li>
-  <li>urlManager</li>
-  <li>response</li>
-  <li>request</li>
-  <li>user</li>
-  <li>view</li>
-  <li>assetManager</li>
-  <li>formatter</li>
-  <li>i18n</li>
-  <li>session</li>
-</ul>
-
-<h4 id="yiibaseapplication"><code>yii/base/application</code></h4>
-
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="x">/**</span>
-<span class="x">     * Returns the configuration of core application components.</span>
-<span class="x">     * @see set()</span>
-<span class="x">     */</span>
-<span class="x">    public function coreComponents()</span>
-<span class="x">    {</span>
-<span class="x">        return [</span>
-<span class="x">            &#39;log&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\log\Dispatcher&#39;],</span>
-<span class="x">            &#39;view&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\web\View&#39;],</span>
-<span class="x">            &#39;formatter&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\i18n\Formatter&#39;],</span>
-<span class="x">            &#39;i18n&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\i18n\I18N&#39;],</span>
-<span class="x">            &#39;mailer&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\swiftmailer\Mailer&#39;],</span>
-<span class="x">            &#39;urlManager&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\web\UrlManager&#39;],</span>
-<span class="x">            &#39;assetManager&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\web\AssetManager&#39;],</span>
-<span class="x">            &#39;security&#39; =&gt; [&#39;class&#39; =&gt; &#39;yii\base\Security&#39;],</span>
-<span class="x">        ];</span>
-<span class="x">    }pr</span></code></pre></div>
-
 
       </article>
       <hr>
@@ -248,7 +217,7 @@
     <div class="post-area post comment">
       <!-- 多说评论框 start -->
       
-      <div class="ds-thread" data-thread-key="/2015/08/01/yii2-application" data-title="Yii2 application & component" data-url="gaohaoyang.github.io/2015/08/01/yii2-application/"></div>
+      <div class="ds-thread" data-thread-key="/2015/10/29/yii-Authentication" data-title="Yii2 Authentication" data-url="gaohaoyang.github.io/2015/10/29/yii-Authentication/"></div>
       
       <!-- 多说评论框 end -->
     </div>

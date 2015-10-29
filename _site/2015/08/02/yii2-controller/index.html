@@ -117,11 +117,18 @@
       <article>
         <ul id="markdown-toc">
   <li><a href="#controller" id="markdown-toc-controller">Controller</a></li>
-  <li><a href="#functions-related-to-action-in-yiibasecontrollerphp" id="markdown-toc-functions-related-to-action-in-yiibasecontrollerphp">Functions related to action in <code>yii\base\Controller.php</code></a></li>
-  <li><a href="#standalone-actions" id="markdown-toc-standalone-actions">Standalone Actions</a></li>
+  <li><a href="#action" id="markdown-toc-action">Action</a>    <ul>
+      <li><a href="#functions-related-to-action-in-yiibasecontrollerphp" id="markdown-toc-functions-related-to-action-in-yiibasecontrollerphp">Functions related to action in <code>yii\base\Controller.php</code></a></li>
+      <li><a href="#standalone-actions" id="markdown-toc-standalone-actions">Standalone Actions</a></li>
+    </ul>
+  </li>
+  <li><a href="#web-controller--yiiwebcontroller" id="markdown-toc-web-controller--yiiwebcontroller">Web Controller  <code>Yii/web/controller</code></a>    <ul>
+      <li><a href="#response-in-web-controller" id="markdown-toc-response-in-web-controller">Response in web controller</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h3 id="controller">Controller</h3>
+<h2 id="controller">Controller</h2>
 
 <p>Yii has three different controllers:</p>
 
@@ -138,12 +145,27 @@
 </ul>
 
 <blockquote>
-  <p>yii中创建控制器是在application中的request通过UrlManager解析得出路由信息，然后再由yii\base\Module中的</p>
+  <p>yii中创建控制器是在application中的request通过UrlManager解析得出路由信息，然后再由yii\base\Module中的方法来创建控制器，最后由控制器再执行相应的动作.</p>
 </blockquote>
 
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">runAction</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="nv">$params</span> <span class="o">=</span> <span class="p">[])</span></code></pre></div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">runAction</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="nv">$params</span> <span class="o">=</span> <span class="p">[])</span>
+    <span class="p">{</span>
+        <span class="nv">$parts</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">createController</span><span class="p">(</span><span class="nv">$route</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">is_array</span><span class="p">(</span><span class="nv">$parts</span><span class="p">))</span> <span class="p">{</span>
+            <span class="cm">/* @var $controller Controller */</span>
+            <span class="k">list</span><span class="p">(</span><span class="nv">$controller</span><span class="p">,</span> <span class="nv">$actionID</span><span class="p">)</span> <span class="o">=</span> <span class="nv">$parts</span><span class="p">;</span>
+            <span class="nv">$oldController</span> <span class="o">=</span> <span class="nx">Yii</span><span class="o">::</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">controller</span><span class="p">;</span>
+            <span class="nx">Yii</span><span class="o">::</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">controller</span> <span class="o">=</span> <span class="nv">$controller</span><span class="p">;</span>
+            <span class="c1">//调用yii/base/controller中的runAction方法，执行相应的action</span>
+            <span class="nv">$result</span> <span class="o">=</span> <span class="nv">$controller</span><span class="o">-&gt;</span><span class="na">runAction</span><span class="p">(</span><span class="nv">$actionID</span><span class="p">,</span> <span class="nv">$params</span><span class="p">);</span>
+            <span class="nx">Yii</span><span class="o">::</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">controller</span> <span class="o">=</span> <span class="nv">$oldController</span><span class="p">;</span>
 
-<p>方法来创建控制器，最后由控制器再执行相应的动作.</p>
+            <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$id</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getUniqueId</span><span class="p">();</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">InvalidRouteException</span><span class="p">(</span><span class="s1">&#39;Unable to resolve the request &quot;&#39;</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$id</span> <span class="o">===</span> <span class="s1">&#39;&#39;</span> <span class="o">?</span> <span class="nv">$route</span> <span class="o">:</span> <span class="nv">$id</span> <span class="o">.</span> <span class="s1">&#39;/&#39;</span> <span class="o">.</span> <span class="nv">$route</span><span class="p">)</span> <span class="o">.</span> <span class="s1">&#39;&quot;.&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span></code></pre></div>
 
 <p>Yii中的路由分三种情况：</p>
 
@@ -156,6 +178,14 @@
 <p>这三个有优先顺序，所以在创建控制器的时候，也是先查看是否是模块类型的路由，如果是，则获取这个模块，再由这个模块来创建控制器<br />
 接着再判断是否是第二种带有命名空间的。</p>
 
+<blockquote>
+  <p>contoller创建参见 yii/base/module中的createController和createControllerByID方法</p>
+</blockquote>
+
+<hr />
+
+<h2 id="action">Action</h2>
+
 <h3 id="functions-related-to-action-in-yiibasecontrollerphp">Functions related to action in <code>yii\base\Controller.php</code></h3>
 
 <p><strong>Sequence</strong>: <strong>resolve route</strong> —&gt; <strong>run action</strong> —&gt; <strong>create action</strong></p>
@@ -164,14 +194,20 @@
   <p>Runs a request specified in terms of a route.</p>
 </blockquote>
 
-<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="k">public</span> <span class="k">function</span> <span class="nf">run</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="nv">$params</span> <span class="o">=</span> <span class="p">[])</span>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="c1">// route值可以为当前controller中的action id,</span>
+<span class="c1">// 或module id/controller id/action id/这种格式</span>
+<span class="c1">// 如果以“/”开头，将用application来处理，否则，用module来处理</span>
+<span class="k">public</span> <span class="k">function</span> <span class="nf">run</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="nv">$params</span> <span class="o">=</span> <span class="p">[])</span>
 <span class="p">{</span>
         <span class="nv">$pos</span> <span class="o">=</span> <span class="nb">strpos</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="nv">$pos</span> <span class="o">===</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">//如果没有“/”，则为action id，直接调用runAction来执行这个action。如：index</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">runAction</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="nv">$params</span><span class="p">);</span>
         <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$pos</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">//如果“/”在中间，由当前的module来处理这个route。如：product/index</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">module</span><span class="o">-&gt;</span><span class="na">runAction</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="nv">$params</span><span class="p">);</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">//如果以“/”开头，则用当前的application来处理这个route。如：/product/index;</span>
             <span class="k">return</span> <span class="nx">Yii</span><span class="o">::</span><span class="nv">$app</span><span class="o">-&gt;</span><span class="na">runAction</span><span class="p">(</span><span class="nb">ltrim</span><span class="p">(</span><span class="nv">$route</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">),</span> <span class="nv">$params</span><span class="p">);</span>
         <span class="p">}</span>
 <span class="p">}</span></code></pre></div>
@@ -196,6 +232,7 @@
         <span class="nv">$oldAction</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">action</span><span class="p">;</span>
         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">action</span> <span class="o">=</span> <span class="nv">$action</span><span class="p">;</span>
 
+        <span class="c1">//用来保存当前控制器的所有父模块，顺序为由子模块到父模块</span>
         <span class="nv">$modules</span> <span class="o">=</span> <span class="p">[];</span>
         <span class="nv">$runAction</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
         <span class="c1">//获取当前控制器的所有的模块，并执行每个模块的beforeAction来检查当前的action是否可以执行</span>
@@ -212,7 +249,7 @@
         <span class="p">}</span>
 
         <span class="nv">$result</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
-        <span class="c1">//如果所以的父模块都满足执行的条件</span>
+        <span class="c1">//如果所有的父模块都满足执行的条件</span>
         <span class="k">if</span> <span class="p">(</span><span class="nv">$runAction</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">beforeAction</span><span class="p">(</span><span class="nv">$action</span><span class="p">))</span> <span class="p">{</span>
             <span class="c1">// run the action</span>
             <span class="c1">//再判断当前控制器中是beforeAction，</span>
@@ -244,7 +281,7 @@
             <span class="nv">$id</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">defaultAction</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="nv">$actionMap</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">actions</span><span class="p">();</span>
-        <span class="c1">//如果在actions方法中指定了独立的动作，则直接使用此动作</span>
+        <span class="c1">//如果在actions方法中指定了Standalone Actions，则直接使用此动作</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nv">$actionMap</span><span class="p">[</span><span class="nv">$id</span><span class="p">]))</span> <span class="p">{</span>
             <span class="k">return</span> <span class="nx">Yii</span><span class="o">::</span><span class="na">createObject</span><span class="p">(</span><span class="nv">$actionMap</span><span class="p">[</span><span class="nv">$id</span><span class="p">],</span> <span class="p">[</span><span class="nv">$id</span><span class="p">,</span> <span class="nv">$this</span><span class="p">]);</span>
         <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nb">preg_match</span><span class="p">(</span><span class="s1">&#39;/^[a-z0-9\\-_]+$/&#39;</span><span class="p">,</span> <span class="nv">$id</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nb">strpos</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="k">false</span> <span class="o">&amp;&amp;</span> <span class="nb">trim</span><span class="p">(</span><span class="nv">$id</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="nv">$id</span><span class="p">)</span> <span class="p">{</span>
@@ -263,6 +300,21 @@
 
 <h3 id="standalone-actions">Standalone Actions</h3>
 
+<p>There are two ways to create a action:</p>
+
+<ul>
+  <li>inline actions  :
+    <ul>
+      <li>An inline action is defined as a method in the controller class.</li>
+    </ul>
+  </li>
+  <li>standalone actions :
+    <ul>
+      <li>A standalone action is a class extending yii\base\Action or its child classes.</li>
+    </ul>
+  </li>
+</ul>
+
 <p>由createAction可知，当controller在创建action的时候，会根据动作ID先在Standalone Actions中的$actionMap数组里面查找，如果找到则返回这个动作。所以这里定义的动作的优先级要大于在控制器里面定义的actionXXX函数。</p>
 
 <blockquote>
@@ -276,6 +328,93 @@
 <span class="p">{</span>
     <span class="k">return</span> <span class="p">[];</span>
 <span class="p">}</span></code></pre></div>
+
+<hr />
+
+<h2 id="web-controller--yiiwebcontroller">Web Controller  <code>Yii/web/controller</code></h2>
+
+<p>web controller 继承自 base controller.</p>
+
+<blockquote>
+  <p>Binds the parameters to the action.</p>
+</blockquote>
+
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="x">//此方法是base/controller中bindActionParams方法的实现</span>
+<span class="x">public function bindActionParams($action, $params)</span>
+<span class="x">    {</span>
+<span class="x">        //先通过反射得到动作action的方法信息</span>
+<span class="x">        //判断是Inline Action还是Standalone Action</span>
+<span class="x">        if ($action instanceof InlineAction) {</span>
+<span class="x">            $method = new \ReflectionMethod($this, $action-&gt;actionMethod);</span>
+<span class="x">        } else {</span>
+<span class="x">            $method = new \ReflectionMethod($action, &#39;run&#39;);</span>
+<span class="x">        }</span>
+
+<span class="x">        $args = [];</span>
+<span class="x">        $missing = [];</span>
+<span class="x">        $actionParams = [];</span>
+<span class="x">        foreach ($method-&gt;getParameters() as $param) {</span>
+<span class="x">            //获取action中形参的名字</span>
+<span class="x">            $name = $param-&gt;getName();</span>
+<span class="x">            //判断形参和$_GET中的参数是否匹配</span>
+<span class="x">            if (array_key_exists($name, $params)) {</span>
+<span class="x">                //先判断形参的数据结构，如果是数组，再进一步判断实参</span>
+<span class="x">                if ($param-&gt;isArray()) {</span>
+<span class="x">                    //如果$_GET中的实参也为数组，直接返回值，否则把实参包装成数组</span>
+<span class="x">                    $args[] = $actionParams[$name] = is_array($params[$name]) ? $params[$name] : [$params[$name]];</span>
+<span class="x">                } elseif (!is_array($params[$name])) {</span>
+<span class="x">                    //如果$_GET中的实参不是数组，则直接返回值</span>
+<span class="x">                    $args[] = $actionParams[$name] = $params[$name];</span>
+<span class="x">                } else {</span>
+<span class="x">                    throw new BadRequestHttpException(Yii::t(&#39;yii&#39;, &#39;Invalid data received for parameter &quot;{param}&quot;.&#39;, [</span>
+<span class="x">                        &#39;param&#39; =&gt; $name,</span>
+<span class="x">                    ]));</span>
+<span class="x">                }</span>
+<span class="x">                unset($params[$name]);</span>
+<span class="x">            } elseif ($param-&gt;isDefaultValueAvailable()) {</span>
+<span class="x">                //如果在$_GET中没有找到实参,则先判断形参是否有默认值</span>
+<span class="x">                $args[] = $actionParams[$name] = $param-&gt;getDefaultValue();</span>
+<span class="x">            } else {</span>
+<span class="x">                //action中定义的形参没有在$_GET中找到</span>
+<span class="x">                $missing[] = $name;</span>
+<span class="x">            }</span>
+<span class="x">        }</span>
+
+<span class="x">        //action中的参数有缺少，抛异常</span>
+<span class="x">        if (!empty($missing)) {</span>
+<span class="x">            throw new BadRequestHttpException(Yii::t(&#39;yii&#39;, &#39;Missing required parameters: {params}&#39;, [</span>
+<span class="x">                &#39;params&#39; =&gt; implode(&#39;, &#39;, $missing),</span>
+<span class="x">            ]));</span>
+<span class="x">        }</span>
+
+<span class="x">        $this-&gt;actionParams = $actionParams;</span>
+
+<span class="x">        return $args;</span>
+<span class="x">    }</span></code></pre></div>
+
+<blockquote>
+  <h3 id="response-in-web-controller">Response in web controller</h3>
+</blockquote>
+
+<ul>
+  <li>
+    <p>public function redirect($url, $statusCode = 302)</p>
+
+    <blockquote>
+      <p>Url::to()会对传入的url参数进行处理</p>
+    </blockquote>
+
+    <ul>
+      <li>a string representing a URL (e.g. “http://example.com”)</li>
+      <li>a string representing a URL alias (e.g. “@example.com”)</li>
+      <li>an array in the format of <code>[$route, ...name-value pairs...]</code> (e.g. <code>['site/index', 'ref' =&gt; 1]</code>)</li>
+    </ul>
+  </li>
+  <li>public function goHome()</li>
+  <li>public function goBack($defaultUrl = null)</li>
+  <li>public function refresh($anchor = ‘’)</li>
+</ul>
+
 
       </article>
       <hr>
