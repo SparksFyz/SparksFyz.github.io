@@ -2,7 +2,7 @@
 layout: post
 title:  "PHP Learning"
 date:   2015-10-12
-categories: Network
+categories: PHP
 excerpt: Something need to know when learning PHP
 ---
 
