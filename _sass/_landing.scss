@@ -31,6 +31,7 @@
       z-index: 9;
       font-family: $font-sans;
       .post-title {
+        animation: show-project-post-meta 1s 0.1s 1 ease-out;
         font-weight: 700;
         font-style: normal;
         font-size: 50px;
@@ -58,6 +59,7 @@
           }
         }
         .author-image {
+          animation: show-project-post-meta 1s 0.3s 1 ease-out;
           display: inline-block;
           width: 45px;
           height:45px;
@@ -68,10 +70,12 @@
           text-indent: -9999px;
         }
         .author-name {
+          animation: show-project-post-meta 1s 0.3s 1 ease-out;
           display: inline;
           margin-left: 10px;
         }
         .landing-whatsup {
+          animation: show-project-post-meta 1s 0.5s 1 ease-out;
           margin-left: 100px;
           color: rgba(255, 255, 255, 0.75);
         }
@@ -88,6 +92,21 @@
         text-decoration: underline;
       }
     }
+  }
+}
+
+@keyFrames show-project-post-meta {
+  0%,15% {
+    opacity: 0;
+    transform: translateY(1em);
+  }
+  85% {
+    opacity: 0.8;
+    transform: none;
+  }
+  88%,
+  100% {
+    opacity: 1;
   }
 }
 

@@ -16,6 +16,7 @@
 }
 
 .personal-category-item {
+  // animation: show-border 2s 1 ease-out;
   border-left: 5px solid;
   padding-left: 50px;
   padding-bottom: 0.5em;
@@ -24,6 +25,7 @@
 }
 
 .personal-category-title {
+  animation: show-category-title 0.8s 1 ease-out;
   font-size: 0.9em;
   max-width: 150px;
   text-align: center;
@@ -37,6 +39,7 @@
 }
 
 .item-name {
+  animation: show-item-name 1s 1 ease-out;
   font-size: 1.5em;
   font-weight: 700;
   position: absolute;
@@ -44,6 +47,7 @@
 }
 
 .item-date {
+  animation: show-date 2s 1 ease-out;
   position: absolute;
   right: 750px;
   top: -45px;
@@ -69,6 +73,10 @@
   border-radius: 50%;
   z-index: 10;
   margin: 10px auto;
+}
+
+.description {
+  // animation: show-item-name 2s 1s 1 ease-out;
 }
 
 .overview {
@@ -143,5 +151,50 @@
   }
   .target-dot {
     background: $grey;
+  }
+}
+
+@keyFrames show-item-name {
+  0%,15% {
+    opacity: 0;
+    transform: translateX(2em);
+  }
+  85% {
+    opacity: 0.8;
+    transform: none;
+  }
+  88%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyFrames show-category-title {
+  0%,15% {
+    opacity: 0;
+    transform: translateY(-1em);
+  }
+  85% {
+    opacity: 0.8;
+    transform: none;
+  }
+  88%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyFrames show-date {
+  0%,15% {
+    opacity: 0;
+    transform:rotate(90deg);
+  }
+  85% {
+    opacity: 0.8;
+    transform: none;
+  }
+  88%,
+  100% {
+    opacity: 1;
   }
 }
