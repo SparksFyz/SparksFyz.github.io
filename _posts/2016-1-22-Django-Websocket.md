@@ -60,6 +60,8 @@ gevent-socketio 用python版的socketio实现,包括django等一些基于wsgi的
 - 仍然有人在不断得维护更新,最新的版本支持到了python-3.4和django-1.8.
 - 扩展性比较好,application支持的连接数很大.
 
+__hint__: 具体的demo例子, 可以另开一篇介绍.
+
 
 ### SwampDragon
 
