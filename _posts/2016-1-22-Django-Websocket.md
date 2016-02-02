@@ -9,7 +9,8 @@ excerpt: Django-Websocket
 ### Websocket
 
 __From Wikipedia__
-> Websocket is a protocol for full-duplex communication channels over a single TCP connection.
+
+Websocket is a protocol for full-duplex communication channels over a single TCP connection.
 
 ### Socket.IO
 Socket.IO 是一个比较常用的javascript库,通过使用websocket等协议,提供了基于event的实时双向通信功能.通过前端的javascript库和nodejs实现的server就能实现通信.
@@ -31,7 +32,7 @@ Python 在使用websocket的时候比较麻烦,主要会遇到两个问题
 
 #### gevent-socketio
 
-[link](https://github.com/abourget/gevent-socketio)
+[github](https://github.com/abourget/gevent-socketio)
 
 gevent 大致是一个基于协程的python网络库, 它的编程模型和类似于nodejs, 在server端能提供一些类似的功能, 例如:
 
