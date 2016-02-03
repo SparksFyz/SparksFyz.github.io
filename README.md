@@ -5,7 +5,7 @@ This is the blog of Sparks.
 
 The Jekyll theme I used is inspired by [Gaohaoyang](https://github.com/Gaohaoyang/gaohaoyang.github.io).
 
-It really helps me a lot.
+It really saved my time.
 
 
 
