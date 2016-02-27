@@ -2,7 +2,7 @@
 layout: post
 title:  "Proxy Using SSH Tunnel"
 date:   2015-10-12
-categories: network
+categories: Network
 excerpt: Proxy Using SSH Tunnel
 ---
 
