@@ -64,9 +64,9 @@ $ ssh -CnfND 12345 username@proxy_server
 $ ps aux | grep ssh
 
 # you can kill it or let it run in the shell
-$ ssh -CTND 12345 username@sshd_server
+$ ssh -CTND 12345 username@proxy_server
 
 # you can listen on all addresses on the host by:
-$ ssh -D "*:12345" username@sshd_server
+$ ssh -D "*:12345" username@proxy_server
 
 {% endhighlight %}
