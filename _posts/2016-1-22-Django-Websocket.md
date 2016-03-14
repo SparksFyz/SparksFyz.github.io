@@ -2,7 +2,7 @@
 layout: post
 title:  "Django Websocket"
 date:   2016-1-22
-categories: Django
+categories: python
 excerpt: Django-Websocket
 ---
 
