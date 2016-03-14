@@ -16,8 +16,10 @@ excerpt: The translation of A Web Crawler With asyncio Coroutines
 - 文章名: A Web Crawler With asyncio Coroutines
 - 作者: A. Jesse Jiryu Davis and Guido van Rossum
 
-> 作者介绍:
+>> 作者介绍:
+
         A. Jesse Jiryu Davis is a staff engineer at MongoDB in New York. He wrote Motor, the async MongoDB Python driver, and he is the lead developer of the MongoDB C Driver and a member of the PyMongo team. He contributes to asyncio and Tornado.
+
         Guido van Rossum is the creator of Python, one of the major programming languages on and off the web. The Python community refers to him as the BDFL (Benevolent Dictator For Life), a title straight from a Monty Python skit.
 
 
