@@ -562,11 +562,334 @@ caller这样的生成器函数就像之前的根函数一样,下面是负责代�
       File "<input>", line 2, in gen_fn
     Exception: my error
 
+上面的栈调用记录很有用,显示了caller函数在向gen函数代理的时候跑出了异常.更有用的是,我们能在异常处理函数中封装调用,和普通的子程序一样.
+
+    >>> def gen_fn():
+    ...     yield 1
+    ...     raise Exception('uh oh')
+    ...
+    >>> def caller_fn():
+    ...     try:
+    ...         yield from gen_fn()
+    ...     except Exception as exc:
+    ...         print('caught {}'.format(exc))
+    ...
+    >>> caller = caller_fn()
+    >>> caller.send(None)
+    1
+    >>> caller.send('hello')
+    caught uh oh
+
+所以我们可以像正常使用协程一样把子程序加入fetch函数中,我们使用一个read协程来接收一个消息块:
+
+    def read(sock):
+        f = Future()
+
+        def on_readable():
+            f.set_result(sock.recv(4096))
+
+        selector.register(sock.fileno(), EVENT_READ, on_readable)
+        chunk = yield f  # Read one chunk.
+        selector.unregister(sock.fileno())
+        return chunk
+
+在read函数之上使用一个read_all协程来接收整条消息:
+
+    def read_all(sock):
+        response = []
+        # Read whole response.
+        chunk = yield from read(sock)
+        while chunk:
+            response.append(chunk)
+            chunk = yield from read(sock)
+
+        return b''.join(response)
+
+通过这样的封装,可以使yield from语句看起来消失,就像在调用传统的方法在完成阻塞IO.但实际上,read和read_all函数都是协程. yield from read语句在IO完成之前都将阻塞read\_all函数.当read\_all函数中断后,asyncio时间循环会去干其他事情并等待IO完成.read\_all函数在read收到真实的值完成工作后恢复运行.在函数调用栈底,fetch函数会首先调用read\_all.
+
+    class Fetcher:
+        def fetch(self):
+             # ... connection logic from above, then:
+            sock.send(request.encode('ascii'))
+            self.response = yield from read_all(sock)
+
+神奇的是,Task类不需要做任何改动.它还是像之前一样驱动fetch协程:
+
+    Task(fetcher.fetch())
+    loop()
+
+当read yield返回预期结果,task实例通过yield from语句提供的通道接收到这个值,看上去就像直接从fetch函数中传出来的一样.当循环循环接收到预期值,task实例将结果传入fetch函数,read函授接收值就像task实例直接驱动read函数一样.
 
 
+为了优化程序中协程的实现,我们需要修改一个瑕疵.我们的代码在等待预期结果的时候使用了yield语句,但是在将任务代理给子协程时使用了yield from 语句.我们使用yield from语句来中断协程会显得更精妙.这样使用可以让协程不必担忧它需要等待什么样的事件.我们的程序可以利用了python中生成器和迭代器共通的优点.这里可以重现一些方法使Future类实现可迭代:
 
+    # Method on Future class.
+    def __iter__(self):
+        # Tell Task to resume me here.
+        yield self
+        return self.result
 
+future实例的\__iter__方法也是一个协程,通过yield语句输出自己.现在当我们将代码换成这样:
 
+    # f is a Future.
+    yield f
+
+    # with this
+    # f is a Future.
+    yield from f
+
+不一样的代码但是结果都是相同的.负责驱动的Task类通过调用self.core.send(result)来接收预期结果.当future传回真正结果时,它会把新的结果传回协程.
+
+到处使用yield from语句的优点在哪?这样写的优点和使用yield传出预期结果然后将其他工作交给子协程代理的方案相比优势在哪?这样写的优点其实在于现在一个方法能自由改变自身的实现但不会影响调用者.这样的方法也许是一个返回预期值的普通函数,也许是一个包含了yield from语句的生成器函数.在这种情况下,调用者函数只需要使用yield from语句等待结果就行了.
+
+读到这里,我们差不多展示完了asyncio模块中协程的使用方法.我们深入了解了生成器的机制,然后简单的实现了future类和task类.我们简述了asyncio是如何实现下面两个优点的:并发IO比多线程更加高效并且比回调机制更优美.当然,真实应用asyncio模块的代码要比我们的程序更加复杂.真实的框架会使用零拷贝IO,平等调度,异常处理和其他一系列良好的功能.
+
+对于使用asyncio模块的编码者来说,在代码中使用协程会更加地简化,在我们之前实现的程序中,可以看到回调,任务,预期结果.甚至包括非阻塞情况下调用select方法.但是当使用asyncio模块构建应用时,这些复杂的代码都不会出现.我们如此简化地抓取URL:
+
+    @asyncio.coroutine
+    def fetch(self, url):
+        response = yield from self.session.get(url)
+        body = yield from response.read()
+
+介绍完了asyncio模块,让我们回到编写爬虫程序这个话题上来.
+
+## 整合协程
+
+文章一开始就在讨论爬虫程序如何工作,现在我们将会使用asyncio协程模型实现爬虫应用.
+
+爬虫程序会从第一个页面开始抓取,然后解析成URL,最后将url存入队列中.当爬虫开始抓取其他网站时,爬虫会并行地抓取.但是为了限制在客户端和服务端限制规模,程序会设定一个并发的最大数量.当一个抓取工作完成时,这个子程序会立刻从队列中拉取新的连接继续抓取信息.当没有那么多连接需要抓取时,那些空闲的协程会停止工作.但是当一个协程访问一个页面抓取到大量新连接时,队列容量会突然扩大,那些空闲的协程会被唤醒然后继续工作.最后爬虫程序会在工作完成后自动退出.
+
+想象一下如果这些被当做工人的子程序,如果这些子程序是线程,要如何表达爬虫的算法?我们需要python标准库提供的同步队列.每次有一项被加入到队列中,队列会增加task实例的数量.这些线程在完成各自的工作后会调用task_done方法.主线程会在执行Queue.join方法是阻塞知道与每一个队列内的项目匹配的线程调用task\_done方法才会退出.
+
+协程通过asyncio模块和队列能实现相同的模式.首先需要引入asyncio队列:
+
+    try:
+        from asyncio import JoinableQueue as Queue
+    except ImportError:
+        # In Python 3.5, asyncio.JoinableQueue is
+        # merged into Queue.
+        from asyncio import Queue
+
+我们需要在爬虫类中收集子程序共享的状态,然后在crawler方法中编写主要的逻辑.程序会从使用协程的crawler方法开始运行,然后运行事件循环直到函数执行完成:
+
+    loop = asyncio.get_event_loop()
+
+    crawler = crawling.Crawler('http://xkcd.com', max_redirect=10)
+
+    loop.run_until_complete(crawler.crawl())
+
+crawler对象实例化时会接收一个根url和最大的重定向数量作为参数,它会将这对参数存入队列,下面会介绍这样做的原因.
+
+    class Crawler:
+        def __init__(self, root_url, max_redirect):
+            self.max_tasks = 10
+            self.max_redirect = max_redirect
+            self.q = Queue()
+            self.seen_urls = set()
+
+            # aiohttp's ClientSession does connection pooling and
+            # HTTP keep-alives for us.
+            self.session = aiohttp.ClientSession(loop=loop)
+
+            # Put (URL, max_redirect) in the queue.
+            self.q.put((root_url, self.max_redirect))
+
+需要完成的任务数量为1,回到程序主脚本中,我们需要启动事件循环和调用crawler方法.
+
+    loop.run_until_complete(crawler.crawl())
+
+crawl这个协程函数负责启动一个个负责并行抓取工作的子程序,它就像一个主线程一样:crawl函数会在调用join方法时阻塞直到所有的子程序完成工作,而这些子程序只需要在后台运行.
+
+    @asyncio.coroutine
+    def crawl(self):
+        """Run the crawler until all work is done."""
+        workers = [asyncio.Task(self.work())
+                   for _ in range(self.max_tasks)]
+
+        # When all work is done, exit.
+        yield from self.q.join()
+        for w in workers:
+            w.cancel()
+
+如果用线程替代这些子程序,我们一定不愿意同时开启这些线程,除非真的需要线程资源时,我们需要尽量避免新建线程,一个线程池对于需求的容量会不断地增长.而协程资源是很廉价的,所以程序可以同时开启最大数量的子程序.
+
+这里有一个有趣的点就是如何关闭爬虫程序.当join方法在接收实际结果时,子程序的任务是活着的只是处于挂起状态,代表它们在等待更多的url.所以主协程在退出之前需要取消它们的状态.那么如何取消一个任务操作呢?生成器有一个我们还未介绍的功能,我们能够从外部将一个异常扔入生成器函数中:
+
+    >>> gen = gen_fn()
+    >>> gen.send(None)  # Start the generator as usual.
+    1
+    >>> gen.throw(Exception('error'))
+    Traceback (most recent call last):
+      File "<input>", line 3, in <module>
+      File "<input>", line 2, in gen_fn
+    Exception: error
+
+生成器函数会被throw方法恢复,但是这个操作也会引起一个异常.如果在生成器函数中没有代码去抓住这个异常,这个异常会从栈中不断冒泡,通过这个方法可以取消一个协程的运行状态:
+
+    # Method of Task class.
+    def cancel(self):
+        self.coro.throw(CancelledError)
+
+不论生成器函数在那一行yield from语句停住, 函数都会在那一行恢复然后抛出异常.我们可以在task类中的step方法中处理这个异常:
+
+    # Method of Task class.
+    def step(self, future):
+        try:
+            next_future = self.coro.send(future.result)
+        except CancelledError:
+            self.cancelled = True
+            return
+        except StopIteration:
+            return
+
+        next_future.add_done_callback(self.step)
+
+现在一个task对象能知道自己被取消了,也不会再报出错误.一旦crawl方法取消了子程序,他也会随之退出.事件循环看到协程完成运行时也会退出运行.
+
+    loop.run_until_complete(crawler.crawl())
+
+crawl方法集成了所有主协程需要做的事,即子协程从队列中获取url,抓取内容然后解析成新的连接.每一个子程序独立地完成工作:
+
+    @asyncio.coroutine
+    def work(self):
+        while True:
+            url, max_redirect = yield from self.q.get()
+
+            # Download page and add new links to self.q.
+            yield from self.fetch(url, max_redirect)
+            self.q.task_done()
+
+python在发现这些代码中包含yield from语句时会将之编译成一个生成器函数.所以在crawl方法中,当主协程多次调用self.work方法时,它并不会多次执行这个方法,而是通过引用这段代码新建多个生成器对象,并且都在Task类中进行封装.task实例会接收每个生成器yield传出的预期值,然后通过调用send函数驱动生成器来获取真实结果,因为这些生成器拥有自己的栈帧,也拥有单独的临时变量和指令指针,可以单独地运行.这些子程序之间通过队列协作运行,可以通过下面的语句等待新的url:
+
+    url, max_redirect = yield from self.q.get()
+
+队列容器自带的get方法其实也是一个协程:它会在压入内容时停止,然后恢复运行并返回结果.在偶然的情况下,当主协程取消一个任务子程序时,crawl函数会随之停止,从协程的角度看,当yield from引起异常时它在循环中的最后一次遍历也随之停止.当一个任务子程序抓取页面解析出连接并仍入队列后,它会调用task_done方法来减少计数器.最后,一个子程序抓取页面时发现已经没有新的url,并且在队列中也没有任务.这时候统计子程序数量的计数器会相应地将数量减成零.这是时在等待join返回结果而停止的crawl函数会恢复运行.
+
+这里需要解释一下队列中键值对的数据结构,就像下面这样:
+
+    # URL to fetch, and the number of redirects left.
+    ('http://xkcd.com/353', 10)
+
+新的url还有剩余10个重定向,抓取这个url对应的页面会减少重定向的数量,相应地程序会把新的地址存入队列:
+
+    # URL with a trailing slash. Nine redirects left.
+    ('http://xkcd.com/353/', 9)
+
+之前提到的aiohttp模块会默认帮助程序跟踪重定向并将最终响应结果返回给我们.在不同的程序入口遇到已经重复抓取过的url时,这个模块可以帮主我们合并这些指向相同地点的重定向路径.
+
+爬虫程序在抓取"foo"路径时发现会重定向到"baz"路径,所以他会把"baz"路径加入到已抓取的url集合中.如果下个页面"bar"也会重定向到"baz"路径,程序就不会将"baz"路径加入队列.
+
+    @asyncio.coroutine
+    def fetch(self, url, max_redirect):
+        # Handle redirects ourselves.
+        response = yield from self.session.get(
+            url, allow_redirects=False)
+
+        try:
+            if is_redirect(response):
+                if max_redirect > 0:
+                    next_url = response.headers['location']
+                    if next_url in self.seen_urls:
+                        # We have been down this path before.
+                        return
+
+                    # Remember we have seen this URL.
+                    self.seen_urls.add(next_url)
+
+                    # Follow the redirect. One less redirect remains.
+                    self.q.put_nowait((next_url, max_redirect - 1))
+             else:
+                 links = yield from self.parse_links(response)
+                 # Python set-logic:
+                 for link in links.difference(self.seen_urls):
+                    self.q.put_nowait((link, self.max_redirect))
+                self.seen_urls.update(links)
+        finally:
+            # Return connection to pool.
+            yield from response.release()
+
+如果响应返回的是一个页面而不是重定向,fetch函数会将其解析成连接然后把它加入到队列.如果用多线程实现上面的代码在处理这种情况时会很麻烦.举个例子,在子程序的代码中会检查连接是否在seen_urls集合中,如果不在,会把连接加入到队列然后再把连接放入seen\_urls集合中.如果某个线程中这个操作被打断,另一个线程可能从另一个页面解析到相同的连接,并重复了之前的步骤,于是队列中出现了重复的数据,不仅造成了重复的工作还产生了错误的数据.然而对于协程来说,程序只会在遇到yield from语句时中断.在这个问题上,这一点是协程和多线程区别的关键点.多线程编程需要显式的临界区代码块,通过获取锁,否则程序是可中断的.而python的协程,默认是不可中断的,只有在执行到yield语句时才会放弃控制权.
+
+我们不再不需要之前基于回调版本中那样的fetcher类,那样的方案体现了回调的缺点:在等待IO完成过程中,这些实例对象需要地方保存状态,因为对象的临时变量在回调函数互相调用时生命周期无法保持.但是现在的fetch协程函数能将这些临时变量像普通函数那样保存.当fetch方法完成生成了负责抓取工作的work方法,work方法会调用task_done方法然后从队列中拿到下一个url继续工作.当fetch方法将新的连接存入队列并增加未完成任务的数量,正在等待q.join结果而停止的主协程会继续等待.当没有新的连接并且没有连接需要抓取时,work方法通过调用task\_done方法将未完成任务的数量减少成0.这个事件会恢复join方法,同时主协程也完成工作.
+
+    class Queue:
+        def __init__(self):
+            self._join_future = Future()
+            self._unfinished_tasks = 0
+            # ... other initialization ...
+
+        def put_nowait(self, item):
+            self._unfinished_tasks += 1
+            # ... store the item ...
+
+        def task_done(self):
+            self._unfinished_tasks -= 1
+            if self._unfinished_tasks == 0:
+                self._join_future.set_result(None)
+
+        @asyncio.coroutine
+        def join(self):
+            if self._unfinished_tasks > 0:
+                yield from self._join_future
+
+上面就是主协程的代码,crawl方法接收yield from join表达式的值,所以当最后的子协程将未完成任务减少到零,它会示意crawl方法恢复并结束.至于程序如何结束,既然crawl方法是一个生成器函数,调用时会返回一个生成器对象.为了驱动这个生成器,需要在task类上加上了asyncio装饰.
+
+    class EventLoop:
+        def run_until_complete(self, coro):
+            """Run until the coroutine is done."""
+            task = Task(coro)
+            task.add_done_callback(stop_callback)
+            try:
+                self.run_forever()
+            except StopError:
+                pass
+
+    class StopError(BaseException):
+        """Raised to stop the event loop."""
+
+    def stop_callback(future):
+        raise StopError
+
+当任务完成时会引起StopError异常,循环通过这个异常表示程序正常运行结束了.但是task为什么会调用add\_done_callback方法?你也许会认为这里的task和future类似.你的直觉是正确的.我们必须承认之前没有解释的Task类,task类继承自future类.
+
+    class Task(Future):
+        """A coroutine wrapped in a Future."""
+
+正常情况下一个future实例会在调用set_result方法是被解析,但是当协程停止时task实例会解析自身.仔细想一想之前python生成器在返回结果时会抛出的异常:
+
+    # Method of class Task.
+    def step(self, future):
+        try:
+            next_future = self.coro.send(future.result)
+        except CancelledError:
+            self.cancelled = True
+            return
+        except StopIteration as exc:
+
+            # Task resolves itself with coro's return
+            # value.
+            self.set_result(exc.value)
+            return
+
+        next_future.add_done_callback(self.step)
+
+所以当事件循环调用task.add\_done\_callback(stop_callback)时,它会准备被task停止,下面会再一次运行run\_until\_complete方法.
+
+    # Method of event loop.
+    def run_until_complete(self, coro):
+        task = Task(coro)
+        task.add_done_callback(stop_callback)
+        try:
+            self.run_forever()
+        except StopError:
+            pass
+
+当task实例抓住StopIteration异常然后解析自身,回调函数再循环中会引起StopError,事件循环随之终止调用栈中的run\_until_complete方法.我们的程序也会结束.
+
+## 总结
+
+现在的程序越来越多的是IO密集型而非cpu密集型.对于这些类型的程序,python线程是最差的解决方案,全局的解释器锁会阻止这些程序同时执行计算,而优先级切换会使一些程序很难得到控制权.异步通常是正确的解决模式.但是基于回调的异步机制随着代码的增多,整个程序会变得杂乱不堪.协程与之相比就是一个整洁的选择:通过子程序的代理机制和完善的异常处理以及堆栈记录.如果从忽略yield from语句的角度看,一个协程看起来是一个执行传统阻塞IO的线程.我们甚至可以结合多线程中经典的协作模式,并且不需要做复杂的改变,因此和回调相比,协程对于经历过编程的程序员是一个诱人的词语.但当我们睁开眼睛将注意力放在yield from语句上,我们能从协程放弃控制权允许其他协程运行的行为上发现关键点,和线程不同,协程显式地告诉编码者什么地方可以中断什么地方不可以.Glyph Lefkowitz曾说过这样的话:线程使得局部推理代码变得困难,而局部推理是软件开发中最重要的事情.显式使用yield语句,使得通过测试这段程序而非测试整个系统来理解程序的行为变成可能.这篇文章是在python和异步发展史中复兴期写的.基于生成器的协程,就是上文介绍的例子,在2014年3月正式在python的asyncio模块中发布.在2015年9月,python3.5正式将协程纳入语言的特性中.这个内置的语言特性可以通过新的语法"async def"来声明,而不是之前的"yield from",新的协程通过关键词"await"来代理一个协程或等待一个预期值.
+除了这些更新,协程本质的实现思想没有改变.python新的协程特性虽然在语法和生成器不同但是工作原理很类似.实际上,两者在python解析其中会共享同一种实现方式.Task,Future和事件循环依旧在asyncio模块中扮演着原来的角色.现在既然你已经知道了asyncio协程的原理,你大可忘记其中的细节,这些细节的机制被良好的接口封装起来.但是通过理解实现原理可以帮助我们在异步环境中正确高效地编写代码.
 
 
 
